@@ -1,14 +1,13 @@
-import type React from "react"
 import "./globals.css"
-import { Inter } from "next/font/google"
-import Layout from "./components/layout"
-import { Toaster } from "@/components/ui/toaster"
+import type { Metadata } from "next"
+import { Toaster } from "sonner"
+import SplashScreen from "./components/SplashScreen"
+import BottomNav from "./components/BottomNav"
+import type React from "react"
 
-const inter = Inter({ subsets: ["latin"] })
-
-export const metadata = {
-  title: "Ace Background Check",
-  description: "Comprehensive background screening solutions for businesses of all sizes.",
+export const metadata: Metadata = {
+  title: "ALPHA ONE DEFENSE - Elite Security Solutions",
+  description: "Protecting Your Assets with Unparalleled Expertise and Advanced Strategies",
     generator: 'v0.dev'
 }
 
@@ -19,8 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gradient-dark`}>
-        <Layout>{children}</Layout>
+      <body className="overflow-x-clip">
+        <SplashScreen />
+        {children}
+        <BottomNav />
         <Toaster />
       </body>
     </html>
