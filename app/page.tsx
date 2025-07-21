@@ -7,6 +7,7 @@ import Contact from "./components/Contact"
 import Footer from "./components/Footer"
 import CorporateSecurity from "./components/CorporateSecurity"
 import AdditionalServices from "./components/AdditionalServices"
+import OhioService from "./components/OhioService"
 import Header from "./components/Header"
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
         <section id="home">
           <Hero />
         </section>
+        <OhioService />
         <section id="services">
           <CorporateSecurity />
           <AdditionalServices />
