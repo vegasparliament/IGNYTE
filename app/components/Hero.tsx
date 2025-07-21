@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -116,7 +118,7 @@ export default function Hero() {
               Setting the standard in professional security services with unmatched expertise.
             </p>
 
-            <div className="h-12 overflow-hidden w-full">
+            <div className="h-16 overflow-hidden w-full">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentPoint}
@@ -124,7 +126,7 @@ export default function Hero() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="text-lg font-medium text-[#92EBFF]"
+                  className="text-xl font-medium text-[#92EBFF]"
                 >
                   {keyPoints[currentPoint]}
                 </motion.div>
