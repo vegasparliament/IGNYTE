@@ -118,7 +118,7 @@ export default function Hero() {
               Setting the standard in professional security services with unmatched expertise.
             </p>
 
-            <div className="h-16 overflow-hidden w-full">
+            <div className="h-20 overflow-hidden w-full">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentPoint}
@@ -126,7 +126,7 @@ export default function Hero() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="text-xl font-medium text-[#92EBFF]"
+                  className="text-2xl font-medium text-[#92EBFF]"
                 >
                   {keyPoints[currentPoint]}
                 </motion.div>
