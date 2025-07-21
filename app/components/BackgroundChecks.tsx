@@ -93,7 +93,7 @@ export default function BackgroundChecks() {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch("https://formspree.io/f/xpwaqjbr", {
+      const response = await fetch("https://formspree.io/f/xzzvdkjz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
