@@ -13,6 +13,7 @@ const menuItems = [
   { name: "About", href: "about" },
   { name: "Background Checks", href: "background-checks" },
   { name: "Careers", href: "careers" },
+  { name: "Security News", href: "security-news" },
   { name: "Contact", href: "contact" },
 ]
 

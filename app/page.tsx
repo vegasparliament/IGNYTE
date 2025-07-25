@@ -9,31 +9,37 @@ import CorporateSecurity from "./components/CorporateSecurity"
 import AdditionalServices from "./components/AdditionalServices"
 import OhioService from "./components/OhioService"
 import Header from "./components/Header"
+import News from "./components/News"
 
 export default function Home() {
   return (
-    <main className="app-container">
+    <main className="app-container" itemScope itemType="https://schema.org/WebPage">
       <Header />
       <div className="app-content">
-        <section id="home">
+        <section id="home" itemScope itemType="https://schema.org/Organization">
           <Hero />
         </section>
-        <OhioService />
-        <section id="services">
+        <section itemScope itemType="https://schema.org/Service">
+          <OhioService />
+        </section>
+        <section id="services" itemScope itemType="https://schema.org/Service">
           <CorporateSecurity />
           <AdditionalServices />
           <Services />
         </section>
-        <section id="about">
+        <section id="about" itemScope itemType="https://schema.org/AboutPage">
           <About />
         </section>
-        <section id="background-checks">
+        <section id="background-checks" itemScope itemType="https://schema.org/Service">
           <BackgroundChecks />
         </section>
-        <section id="careers">
+        <section id="careers" itemScope itemType="https://schema.org/JobPosting">
           <Careers />
         </section>
-        <section id="contact">
+        <section id="security-news" itemScope itemType="https://schema.org/NewsArticle">
+          <News />
+        </section>
+        <section id="contact" itemScope itemType="https://schema.org/ContactPage">
           <Contact />
         </section>
       </div>
