@@ -188,18 +188,52 @@ export async function fetchSecurityNews() {
       return { articles: mockSecurityNews, error: null }
     }
 
-    const queries = ["cybersecurity", "data+breach", "security+vulnerability", "cyber+attack", "ransomware", "malware"]
+    const queries = [
+      "cybersecurity+USA",
+      "data+breach+United+States",
+      "security+vulnerability+national",
+      "cyber+attack+Ohio",
+      "ransomware+USA",
+      "malware+United+States",
+    ]
     const allArticles: NewsArticle[] = []
 
     for (const query of queries) {
       const response = await fetch(
-        `https://newsapi.org/v2/everything?q=${query}&sortBy=publishedAt&pageSize=4&apiKey=${apiKey}`,
-        { cache: "no-store" }, // Ensure fresh data
+        `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`,
+        { cache: "no-store" },
       )
 
       if (response.ok) {
         const data = await response.json()
-        allArticles.push(...data.articles)
+        // Filter articles to ensure they're relevant to US/Ohio and in English
+        const filteredArticles = data.articles.filter((article: any) => {
+          const title = article.title?.toLowerCase() || ""
+          const description = article.description?.toLowerCase() || ""
+          const content = title + " " + description
+
+          // Check if content is likely English and relevant
+          const hasEnglishKeywords =
+            /\b(the|and|or|of|in|to|for|with|on|at|by|from|security|cyber|data|breach|attack|vulnerability|malware|ransomware|phishing|hack|threat|ohio|usa|united states|america|national)\b/.test(
+              content,
+            )
+
+          // Filter out non-English content patterns
+          const hasNonEnglishPatterns =
+            /[áéíóúñü¿¡]|[\u4e00-\u9fff]|[\u0590-\u05ff]|[\u0600-\u06ff]|[\u0900-\u097f]/i.test(content)
+
+          // Ensure it's security-related
+          const isSecurityRelated =
+            /\b(security|cyber|data|breach|attack|vulnerability|malware|ransomware|phishing|hack|threat|privacy|encryption|firewall|antivirus)\b/i.test(
+              content,
+            )
+
+          return (
+            hasEnglishKeywords && !hasNonEnglishPatterns && isSecurityRelated && article.title && article.description
+          )
+        })
+
+        allArticles.push(...filteredArticles)
       }
     }
 
