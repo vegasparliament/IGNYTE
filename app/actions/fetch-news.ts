@@ -12,7 +12,7 @@ interface NewsArticle {
   category?: string
 }
 
-// Mock data for fallback
+// Mock data for fallback (keeping existing mock data)
 const mockSecurityNews: NewsArticle[] = [
   {
     title: "Major Healthcare System in Ohio Suffers Ransomware Attack Affecting Patient Data",
@@ -179,11 +179,15 @@ const mockSecurityNews: NewsArticle[] = [
 ]
 
 export async function fetchSecurityNews() {
+  console.log("fetchSecurityNews called - server action executing")
+
   try {
     // Using NewsAPI - API key is now server-side only
     const apiKey = process.env.NEWS_API_KEY
+    console.log("API Key available:", !!apiKey)
 
     if (!apiKey) {
+      console.log("No API key found, using mock data")
       // Fallback to mock data if no API key
       return { articles: mockSecurityNews, error: null }
     }
@@ -198,44 +202,65 @@ export async function fetchSecurityNews() {
     ]
     const allArticles: NewsArticle[] = []
 
+    console.log("Starting API calls for", queries.length, "queries")
+
     for (const query of queries) {
-      const response = await fetch(
-        `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`,
-        { cache: "no-store" },
-      )
+      try {
+        const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`
 
-      if (response.ok) {
-        const data = await response.json()
-        // Filter articles to ensure they're relevant to US/Ohio and in English
-        const filteredArticles = data.articles.filter((article: any) => {
-          const title = article.title?.toLowerCase() || ""
-          const description = article.description?.toLowerCase() || ""
-          const content = title + " " + description
-
-          // Check if content is likely English and relevant
-          const hasEnglishKeywords =
-            /\b(the|and|or|of|in|to|for|with|on|at|by|from|security|cyber|data|breach|attack|vulnerability|malware|ransomware|phishing|hack|threat|ohio|usa|united states|america|national)\b/.test(
-              content,
-            )
-
-          // Filter out non-English content patterns
-          const hasNonEnglishPatterns =
-            /[áéíóúñü¿¡]|[\u4e00-\u9fff]|[\u0590-\u05ff]|[\u0600-\u06ff]|[\u0900-\u097f]/i.test(content)
-
-          // Ensure it's security-related
-          const isSecurityRelated =
-            /\b(security|cyber|data|breach|attack|vulnerability|malware|ransomware|phishing|hack|threat|privacy|encryption|firewall|antivirus)\b/i.test(
-              content,
-            )
-
-          return (
-            hasEnglishKeywords && !hasNonEnglishPatterns && isSecurityRelated && article.title && article.description
-          )
+        const response = await fetch(url, {
+          cache: "no-store",
+          headers: {
+            "User-Agent": "AlphaOneDefense/1.0",
+          },
         })
 
-        allArticles.push(...filteredArticles)
+        console.log(`Query "${query}" response status:`, response.status)
+
+        if (response.ok) {
+          const data = await response.json()
+          console.log(`Query "${query}" returned ${data.articles?.length || 0} articles`)
+
+          if (data.articles) {
+            // Filter articles to ensure they're relevant to US/Ohio and in English
+            const filteredArticles = data.articles.filter((article: any) => {
+              if (!article.title || !article.description) return false
+
+              const title = article.title.toLowerCase()
+              const description = article.description.toLowerCase()
+              const content = title + " " + description
+
+              // Check if content is likely English and relevant
+              const hasEnglishKeywords =
+                /\b(the|and|or|of|in|to|for|with|on|at|by|from|security|cyber|data|breach|attack|vulnerability|malware|ransomware|phishing|hack|threat|ohio|usa|united states|america|national)\b/.test(
+                  content,
+                )
+
+              // Filter out non-English content patterns
+              const hasNonEnglishPatterns =
+                /[áéíóúñü¿¡]|[\u4e00-\u9fff]|[\u0590-\u05ff]|[\u0600-\u06ff]|[\u0900-\u097f]/i.test(content)
+
+              // Ensure it's security-related
+              const isSecurityRelated =
+                /\b(security|cyber|data|breach|attack|vulnerability|malware|ransomware|phishing|hack|threat|privacy|encryption|firewall|antivirus)\b/i.test(
+                  content,
+                )
+
+              return hasEnglishKeywords && !hasNonEnglishPatterns && isSecurityRelated
+            })
+
+            console.log(`Query "${query}" filtered to ${filteredArticles.length} relevant articles`)
+            allArticles.push(...filteredArticles)
+          }
+        } else {
+          console.error(`API call failed for query "${query}":`, response.status, response.statusText)
+        }
+      } catch (queryError) {
+        console.error(`Error fetching query "${query}":`, queryError)
       }
     }
+
+    console.log("Total articles collected:", allArticles.length)
 
     // Remove duplicates and sort by date
     const uniqueArticles = allArticles
@@ -243,10 +268,18 @@ export async function fetchSecurityNews() {
       .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
       .slice(0, 18) // Show 18 articles (3 rows of 6)
 
+    console.log("Final unique articles:", uniqueArticles.length)
+
+    // If no articles found, use mock data
+    if (uniqueArticles.length === 0) {
+      console.log("No articles found, using mock data")
+      return { articles: mockSecurityNews, error: null }
+    }
+
     return { articles: uniqueArticles, error: null }
   } catch (err) {
     console.error("Error fetching news:", err)
     // Fallback to mock data
-    return { articles: mockSecurityNews, error: "Failed to load security news" }
+    return { articles: mockSecurityNews, error: "Failed to load security news - using fallback data" }
   }
 }
