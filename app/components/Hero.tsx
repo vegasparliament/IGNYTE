@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowRight, Loader2, Shield } from "lucide-react"
+import { ArrowRight, Loader2, Shield } from 'lucide-react'
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -89,13 +89,26 @@ export default function Hero() {
   return (
     <div className="relative min-h-[100dvh] flex flex-col justify-center overflow-hidden py-20 px-4 sm:px-6 lg:px-8">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-        style={{
-          backgroundImage:
-            'url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/lupulone_A_group_of_bodyguards_wearing_black_suits_._The_body_e47977ac-2e72-434e-b426-d72475af0bd5_2-Wp9Tc3jIAC4bkdRZagrDugylCqviVh.png")',
-        }}
-      >
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={(e) => {
+            // Fallback to original image if video fails to load
+            const target = e.target as HTMLVideoElement;
+            target.style.display = 'none';
+            const fallbackDiv = document.createElement('div');
+            fallbackDiv.className = 'absolute inset-0 bg-cover bg-center bg-no-repeat';
+            fallbackDiv.style.backgroundImage = 'url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/lupulone_A_group_of_bodyguards_wearing_black_suits_._The_body_e47977ac-2e72-434e-b426-d72475af0bd5_2-Wp9Tc3jIAC4bkdRZagrDugylCqviVh.png")';
+            target.parentNode?.appendChild(fallbackDiv);
+          }}
+        >
+          <source src="https://cdn.midjourney.com/video/441b279d-fc9f-408c-911a-6c7151130786/3.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/50" />
       </div>
 
