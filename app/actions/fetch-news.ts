@@ -178,6 +178,48 @@ const mockSecurityNews: NewsArticle[] = [
   },
 ]
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+async function fetchWithRetry(url: string, maxRetries = 3): Promise<Response> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, {
+        cache: "no-store",
+        headers: {
+          "User-Agent": "AlphaOneDefense/1.0",
+        },
+      })
+
+      // If successful or client error (not rate limit), return immediately
+      if (response.ok || (response.status >= 400 && response.status < 500 && response.status !== 429)) {
+        return response
+      }
+
+      // If rate limited (429), wait before retry
+      if (response.status === 429) {
+        const waitTime = Math.pow(2, attempt) * 1000 // Exponential backoff: 2s, 4s, 8s
+        console.log(`Rate limited (429). Waiting ${waitTime}ms before retry ${attempt}/${maxRetries}`)
+        await delay(waitTime)
+        continue
+      }
+
+      // For other server errors, wait briefly and retry
+      if (response.status >= 500) {
+        await delay(1000 * attempt)
+        continue
+      }
+
+      return response
+    } catch (error) {
+      console.error(`Attempt ${attempt} failed:`, error)
+      if (attempt === maxRetries) throw error
+      await delay(1000 * attempt)
+    }
+  }
+
+  throw new Error(`Failed after ${maxRetries} attempts`)
+}
+
 export async function fetchSecurityNews() {
   console.log("fetchSecurityNews called - server action executing")
 
@@ -192,28 +234,22 @@ export async function fetchSecurityNews() {
       return { articles: mockSecurityNews, error: null }
     }
 
-    const queries = [
-      "cybersecurity+USA",
-      "data+breach+United+States",
-      "security+vulnerability+national",
-      "cyber+attack+Ohio",
-      "ransomware+USA",
-      "malware+United+States",
-    ]
+    const queries = ["cybersecurity+breach+USA", "ransomware+attack+United+States", "data+breach+security+Ohio"]
     const allArticles: NewsArticle[] = []
 
     console.log("Starting API calls for", queries.length, "queries")
 
-    for (const query of queries) {
+    for (let i = 0; i < queries.length; i++) {
+      const query = queries[i]
       try {
-        const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`
+        if (i > 0) {
+          console.log("Waiting 2 seconds between API calls to avoid rate limiting...")
+          await delay(2000)
+        }
 
-        const response = await fetch(url, {
-          cache: "no-store",
-          headers: {
-            "User-Agent": "AlphaOneDefense/1.0",
-          },
-        })
+        const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=10&apiKey=${apiKey}`
+
+        const response = await fetchWithRetry(url, 3)
 
         console.log(`Query "${query}" response status:`, response.status)
 
@@ -252,11 +288,18 @@ export async function fetchSecurityNews() {
             console.log(`Query "${query}" filtered to ${filteredArticles.length} relevant articles`)
             allArticles.push(...filteredArticles)
           }
+        } else if (response.status === 429) {
+          console.error(`Rate limit exceeded for query "${query}". Using existing articles and mock data.`)
+          break // Stop making more requests if rate limited
         } else {
           console.error(`API call failed for query "${query}":`, response.status, response.statusText)
         }
       } catch (queryError) {
         console.error(`Error fetching query "${query}":`, queryError)
+        if (queryError instanceof Error && queryError.message.includes("429")) {
+          console.log("Rate limit detected, stopping further API calls")
+          break
+        }
       }
     }
 
@@ -270,16 +313,31 @@ export async function fetchSecurityNews() {
 
     console.log("Final unique articles:", uniqueArticles.length)
 
-    // If no articles found, use mock data
     if (uniqueArticles.length === 0) {
       console.log("No articles found, using mock data")
-      return { articles: mockSecurityNews, error: null }
+      return {
+        articles: mockSecurityNews,
+        error: "Unable to fetch latest news due to API limits. Showing recent security updates.",
+      }
+    } else if (uniqueArticles.length < 6) {
+      // If we have some articles but not enough, supplement with mock data
+      console.log(`Only ${uniqueArticles.length} articles found, supplementing with mock data`)
+      const supplementedArticles = [...uniqueArticles, ...mockSecurityNews.slice(0, 18 - uniqueArticles.length)]
+      return {
+        articles: supplementedArticles,
+        error: "Limited news available due to API restrictions. Some content may be from recent archives.",
+      }
     }
 
     return { articles: uniqueArticles, error: null }
   } catch (err) {
     console.error("Error fetching news:", err)
+    const errorMessage =
+      err instanceof Error && err.message.includes("429")
+        ? "News API rate limit reached. Showing recent security updates."
+        : "Unable to fetch latest news. Showing recent security updates."
+
     // Fallback to mock data
-    return { articles: mockSecurityNews, error: "Failed to load security news - using fallback data" }
+    return { articles: mockSecurityNews, error: errorMessage }
   }
 }
