@@ -11,6 +11,7 @@ import OhioService from "./components/OhioService"
 import Header from "./components/Header"
 import News from "./components/News"
 import HiringRequirements from "./components/HiringRequirements"
+import FloatingContactBox from "./components/FloatingContactBox"
 
 export default function Home() {
   return (
@@ -47,6 +48,7 @@ export default function Home() {
           <Contact />
         </section>
       </div>
+      <FloatingContactBox />
       <Footer />
     </main>
   )
