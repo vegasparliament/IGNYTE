@@ -188,6 +188,7 @@ async function fetchWithRetry(url: string, maxRetries = 3): Promise<Response> {
         headers: {
           "User-Agent": "AlphaOneDefense/1.0",
         },
+        signal: AbortSignal.timeout(10000), // 10 second timeout
       })
 
       // If successful or client error (not rate limit), return immediately
@@ -205,15 +206,33 @@ async function fetchWithRetry(url: string, maxRetries = 3): Promise<Response> {
 
       // For other server errors, wait briefly and retry
       if (response.status >= 500) {
-        await delay(1000 * attempt)
+        const waitTime = 1000 * attempt
+        console.log(`Server error (${response.status}). Waiting ${waitTime}ms before retry ${attempt}/${maxRetries}`)
+        await delay(waitTime)
         continue
       }
 
       return response
     } catch (error) {
       console.error(`Attempt ${attempt} failed:`, error)
-      if (attempt === maxRetries) throw error
-      await delay(1000 * attempt)
+
+      if (error instanceof Error) {
+        if (error.name === "TimeoutError") {
+          console.log(`Request timeout on attempt ${attempt}/${maxRetries}`)
+        } else if (error.name === "AbortError") {
+          console.log(`Request aborted on attempt ${attempt}/${maxRetries}`)
+        }
+      }
+
+      if (attempt === maxRetries) {
+        throw new Error(
+          `API request failed after ${maxRetries} attempts: ${error instanceof Error ? error.message : "Unknown error"}`,
+        )
+      }
+
+      const waitTime = 1000 * attempt
+      console.log(`Waiting ${waitTime}ms before retry ${attempt + 1}/${maxRetries}`)
+      await delay(waitTime)
     }
   }
 
@@ -231,23 +250,32 @@ export async function fetchSecurityNews() {
     if (!apiKey) {
       console.log("No API key found, using mock data")
       // Fallback to mock data if no API key
-      return { articles: mockSecurityNews, error: null }
+      return {
+        articles: mockSecurityNews,
+        error: "API key not configured. Showing recent security updates from our archives.",
+      }
     }
 
-    const queries = ["cybersecurity+breach+USA", "ransomware+attack+United+States", "data+breach+security+Ohio"]
+    const queries = ["cybersecurity+breach+USA", "ransomware+attack+United+States"]
     const allArticles: NewsArticle[] = []
+    let rateLimitHit = false
 
     console.log("Starting API calls for", queries.length, "queries")
 
     for (let i = 0; i < queries.length; i++) {
+      if (rateLimitHit) {
+        console.log("Rate limit detected, skipping remaining queries")
+        break
+      }
+
       const query = queries[i]
       try {
         if (i > 0) {
-          console.log("Waiting 2 seconds between API calls to avoid rate limiting...")
-          await delay(2000)
+          console.log("Waiting 3 seconds between API calls to avoid rate limiting...")
+          await delay(3000) // Increased delay to 3 seconds
         }
 
-        const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=10&apiKey=${apiKey}`
+        const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=15&apiKey=${apiKey}`
 
         const response = await fetchWithRetry(url, 3)
 
@@ -290,15 +318,23 @@ export async function fetchSecurityNews() {
           }
         } else if (response.status === 429) {
           console.error(`Rate limit exceeded for query "${query}". Using existing articles and mock data.`)
+          rateLimitHit = true
           break // Stop making more requests if rate limited
         } else {
           console.error(`API call failed for query "${query}":`, response.status, response.statusText)
         }
       } catch (queryError) {
         console.error(`Error fetching query "${query}":`, queryError)
-        if (queryError instanceof Error && queryError.message.includes("429")) {
-          console.log("Rate limit detected, stopping further API calls")
-          break
+        if (queryError instanceof Error) {
+          if (queryError.message.includes("429") || queryError.message.includes("rate limit")) {
+            console.log("Rate limit detected, stopping further API calls")
+            rateLimitHit = true
+            break
+          }
+          if (queryError.message.includes("timeout") || queryError.message.includes("AbortError")) {
+            console.log(`Request timeout for query "${query}", continuing with next query`)
+            continue
+          }
         }
       }
     }
@@ -315,27 +351,43 @@ export async function fetchSecurityNews() {
 
     if (uniqueArticles.length === 0) {
       console.log("No articles found, using mock data")
+      const errorMessage = rateLimitHit
+        ? "News API daily limit reached. Showing recent security updates from our archives."
+        : "Unable to fetch latest news at this time. Showing recent security updates from our archives."
+
       return {
         articles: mockSecurityNews,
-        error: "Unable to fetch latest news due to API limits. Showing recent security updates.",
+        error: errorMessage,
       }
     } else if (uniqueArticles.length < 6) {
       // If we have some articles but not enough, supplement with mock data
       console.log(`Only ${uniqueArticles.length} articles found, supplementing with mock data`)
       const supplementedArticles = [...uniqueArticles, ...mockSecurityNews.slice(0, 18 - uniqueArticles.length)]
+      const errorMessage = rateLimitHit
+        ? "Limited news due to API rate limits. Some content from recent archives."
+        : "Limited fresh content available. Some articles from recent archives."
+
       return {
         articles: supplementedArticles,
-        error: "Limited news available due to API restrictions. Some content may be from recent archives.",
+        error: errorMessage,
       }
     }
 
     return { articles: uniqueArticles, error: null }
   } catch (err) {
     console.error("Error fetching news:", err)
-    const errorMessage =
-      err instanceof Error && err.message.includes("429")
-        ? "News API rate limit reached. Showing recent security updates."
-        : "Unable to fetch latest news. Showing recent security updates."
+
+    let errorMessage = "Unable to fetch latest news. Showing recent security updates from our archives."
+
+    if (err instanceof Error) {
+      if (err.message.includes("429") || err.message.includes("rate limit")) {
+        errorMessage = "News API rate limit reached. Showing recent security updates from our archives."
+      } else if (err.message.includes("timeout") || err.message.includes("AbortError")) {
+        errorMessage = "News service temporarily unavailable. Showing recent security updates from our archives."
+      } else if (err.message.includes("network") || err.message.includes("fetch")) {
+        errorMessage = "Network connectivity issue. Showing recent security updates from our archives."
+      }
+    }
 
     // Fallback to mock data
     return { articles: mockSecurityNews, error: errorMessage }
