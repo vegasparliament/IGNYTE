@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Shield } from "lucide-react"
+import { Shield, ExternalLink } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -27,9 +27,21 @@ export default function Footer() {
             </Link>
           </nav>
         </div>
-        <div className="text-center mt-4">
+        <div className="text-center mt-4 space-y-2">
           <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} ALPHA ONE DEFENSE. All rights reserved.
+          </p>
+          <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+            Developed by{" "}
+            <Link
+              href="https://ignyte.media"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#92EBFF] hover:text-[#92EBFF]/80 transition-colors inline-flex items-center gap-1"
+            >
+              Ignyte Media
+              <ExternalLink className="h-3 w-3" />
+            </Link>
           </p>
         </div>
       </div>
