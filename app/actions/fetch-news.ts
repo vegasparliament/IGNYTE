@@ -245,10 +245,8 @@ export async function fetchSecurityNews() {
   try {
     const apiKey = process.env.NEWS_API_KEY || process.env.NEXT_PUBLIC_NEWS_API_KEY
     console.log("API Key available:", !!apiKey)
-    console.log("Environment check - NEWS_API_KEY exists:", !!process.env.NEWS_API_KEY)
-    console.log("Environment check - NEXT_PUBLIC_NEWS_API_KEY exists:", !!process.env.NEXT_PUBLIC_NEWS_API_KEY)
 
-    if (!apiKey || apiKey.trim() === "") {
+    if (!apiKey || apiKey.trim() === "" || apiKey.length < 10) {
       console.log("No valid API key found, using mock data")
       return {
         articles: mockSecurityNews,
@@ -256,36 +254,36 @@ export async function fetchSecurityNews() {
       }
     }
 
-    if (apiKey.length < 10) {
-      console.log("API key appears invalid (too short), using mock data")
-      return {
-        articles: mockSecurityNews,
-        error: "Invalid API key configuration. Showing recent security updates from our archives.",
-      }
-    }
-
     const queries = ["cybersecurity+breach+USA", "ransomware+attack+United+States"]
     const allArticles: NewsArticle[] = []
     let rateLimitHit = false
+    let hasNetworkError = false
 
     console.log("Starting API calls for", queries.length, "queries with valid API key")
 
     for (let i = 0; i < queries.length; i++) {
-      if (rateLimitHit) {
-        console.log("Rate limit detected, skipping remaining queries")
+      if (rateLimitHit || hasNetworkError) {
+        console.log("Stopping API calls due to rate limit or network error")
         break
       }
 
       const query = queries[i]
       try {
         if (i > 0) {
-          console.log("Waiting 3 seconds between API calls to avoid rate limiting...")
-          await delay(3000) // Increased delay to 3 seconds
+          console.log("Waiting 3 seconds between API calls...")
+          await delay(3000)
         }
 
         const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=15&apiKey=${apiKey}`
 
-        const response = await fetchWithRetry(url, 3)
+        let response: Response
+        try {
+          response = await fetchWithRetry(url, 3)
+        } catch (fetchError) {
+          console.error(`All retry attempts failed for query "${query}":`, fetchError)
+          hasNetworkError = true
+          continue
+        }
 
         console.log(`Query "${query}" response status:`, response.status)
 
@@ -327,23 +325,14 @@ export async function fetchSecurityNews() {
         } else if (response.status === 429) {
           console.error(`Rate limit exceeded for query "${query}". Using existing articles and mock data.`)
           rateLimitHit = true
-          break // Stop making more requests if rate limited
+          break
         } else {
           console.error(`API call failed for query "${query}":`, response.status, response.statusText)
+          continue
         }
       } catch (queryError) {
-        console.error(`Error fetching query "${query}":`, queryError)
-        if (queryError instanceof Error) {
-          if (queryError.message.includes("429") || queryError.message.includes("rate limit")) {
-            console.log("Rate limit detected, stopping further API calls")
-            rateLimitHit = true
-            break
-          }
-          if (queryError.message.includes("timeout") || queryError.message.includes("AbortError")) {
-            console.log(`Request timeout for query "${query}", continuing with next query`)
-            continue
-          }
-        }
+        console.error(`Error processing query "${query}":`, queryError)
+        continue
       }
     }
 
@@ -353,7 +342,7 @@ export async function fetchSecurityNews() {
     const uniqueArticles = allArticles
       .filter((article, index, self) => index === self.findIndex((a) => a.title === article.title))
       .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-      .slice(0, 18) // Show 18 articles (3 rows of 6)
+      .slice(0, 18)
 
     console.log("Final unique articles:", uniqueArticles.length)
 
@@ -361,19 +350,22 @@ export async function fetchSecurityNews() {
       console.log("No articles found, using mock data")
       const errorMessage = rateLimitHit
         ? "News API daily limit reached. Showing recent security updates from our archives."
-        : "Unable to fetch latest news at this time. Showing recent security updates from our archives."
+        : hasNetworkError
+          ? "News service temporarily unavailable. Showing recent security updates from our archives."
+          : "Unable to fetch latest news at this time. Showing recent security updates from our archives."
 
       return {
         articles: mockSecurityNews,
         error: errorMessage,
       }
     } else if (uniqueArticles.length < 6) {
-      // If we have some articles but not enough, supplement with mock data
       console.log(`Only ${uniqueArticles.length} articles found, supplementing with mock data`)
       const supplementedArticles = [...uniqueArticles, ...mockSecurityNews.slice(0, 18 - uniqueArticles.length)]
       const errorMessage = rateLimitHit
         ? "Limited news due to API rate limits. Some content from recent archives."
-        : "Limited fresh content available. Some articles from recent archives."
+        : hasNetworkError
+          ? "Limited news due to connectivity issues. Some content from recent archives."
+          : "Limited fresh content available. Some articles from recent archives."
 
       return {
         articles: supplementedArticles,
@@ -383,26 +375,12 @@ export async function fetchSecurityNews() {
 
     return { articles: uniqueArticles, error: null }
   } catch (err) {
-    console.error("Error fetching news:", err)
+    console.error("Unexpected error in fetchSecurityNews:", err)
 
-    let errorMessage = "Unable to fetch latest news. Showing recent security updates from our archives."
-
-    if (err instanceof Error) {
-      const errorMsg = err.message.toLowerCase()
-      if (errorMsg.includes("429") || errorMsg.includes("rate limit")) {
-        errorMessage = "News API rate limit reached. Showing recent security updates from our archives."
-      } else if (errorMsg.includes("timeout") || errorMsg.includes("aborterror")) {
-        errorMessage = "News service temporarily unavailable. Showing recent security updates from our archives."
-      } else if (errorMsg.includes("network") || errorMsg.includes("fetch")) {
-        errorMessage = "Network connectivity issue. Showing recent security updates from our archives."
-      } else if (errorMsg.includes("unauthorized") || errorMsg.includes("401")) {
-        errorMessage = "API authentication failed. Showing recent security updates from our archives."
-      } else if (errorMsg.includes("forbidden") || errorMsg.includes("403")) {
-        errorMessage = "API access denied. Showing recent security updates from our archives."
-      }
+    // Always return mock data as fallback - never let errors propagate
+    return {
+      articles: mockSecurityNews,
+      error: "News service temporarily unavailable. Showing recent security updates from our archives.",
     }
-
-    // Fallback to mock data
-    return { articles: mockSecurityNews, error: errorMessage }
   }
 }
