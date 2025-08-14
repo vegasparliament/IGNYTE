@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Home, Shield, User, Mail, Phone, Search } from "lucide-react"
+import { Home, Shield, User, Phone, Search } from "lucide-react"
 import { Link as ScrollLink } from "react-scroll"
 
 const navItems = [
@@ -9,7 +9,6 @@ const navItems = [
   { name: "Services", href: "services", icon: Shield },
   { name: "About", href: "about", icon: User },
   { name: "Requirements", href: "hiring-requirements", icon: Search },
-  { name: "Contact", href: "contact", icon: Mail },
 ]
 
 export default function BottomNav() {

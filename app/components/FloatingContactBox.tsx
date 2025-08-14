@@ -92,10 +92,9 @@ export default function FloatingContactBox() {
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="rounded-full w-16 h-16 bg-[#92EBFF] text-background hover:bg-[#92EBFF]/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse hover:animate-none flex flex-col items-center justify-center"
+              className="rounded-full w-14 h-14 bg-gradient-to-r from-[#92EBFF] to-[#92EBFF]/80 text-background hover:from-[#92EBFF]/90 hover:to-[#92EBFF]/70 shadow-xl hover:shadow-2xl transition-all duration-300 border border-[#92EBFF]/20 backdrop-blur-sm"
             >
-              <MessageCircle className="h-5 w-5 mb-1" />
-              <span className="text-xs font-medium">Contact</span>
+              <MessageCircle className="h-6 w-6" />
               <span className="sr-only">Open Contact Form</span>
             </Button>
           </motion.div>
@@ -111,7 +110,7 @@ export default function FloatingContactBox() {
             exit={{ scale: 0, opacity: 0, x: 100, y: 100 }}
             className="fixed bottom-20 md:bottom-6 right-6 z-40 w-80 max-w-[calc(100vw-2rem)]"
           >
-            <Card className="bg-background/95 backdrop-blur-lg border-[#92EBFF]/20 shadow-2xl">
+            <Card className="bg-background/90 backdrop-blur-xl border border-[#92EBFF]/30 shadow-2xl ring-1 ring-[#92EBFF]/10">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg text-[#92EBFF]">Contact Us</CardTitle>

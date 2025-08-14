@@ -15,7 +15,6 @@ const menuItems = [
   { name: "Careers", href: "careers" },
   { name: "Requirements", href: "hiring-requirements" },
   { name: "Security News", href: "security-news" },
-  { name: "Contact", href: "contact" },
 ]
 
 export default function Header() {

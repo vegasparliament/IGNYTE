@@ -22,9 +22,6 @@ export default function Footer() {
             <Link href="#careers" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Careers
             </Link>
-            <Link href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              Contact
-            </Link>
           </nav>
         </div>
         <div className="text-center mt-4 space-y-2">
