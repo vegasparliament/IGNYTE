@@ -8,7 +8,7 @@ const navItems = [
   { name: "Home", href: "home", icon: Home },
   { name: "Services", href: "services", icon: Shield },
   { name: "About", href: "about", icon: User },
-  { name: "News", href: "security-news", icon: Search },
+  { name: "Requirements", href: "hiring-requirements", icon: Search },
   { name: "Contact", href: "contact", icon: Mail },
 ]
 

@@ -10,6 +10,7 @@ import AdditionalServices from "./components/AdditionalServices"
 import OhioService from "./components/OhioService"
 import Header from "./components/Header"
 import News from "./components/News"
+import HiringRequirements from "./components/HiringRequirements"
 
 export default function Home() {
   return (
@@ -35,6 +36,9 @@ export default function Home() {
         </section>
         <section id="careers" itemScope itemType="https://schema.org/JobPosting">
           <Careers />
+        </section>
+        <section id="hiring-requirements" itemScope itemType="https://schema.org/WebPage">
+          <HiringRequirements />
         </section>
         <section id="security-news" itemScope itemType="https://schema.org/NewsArticle">
           <News />

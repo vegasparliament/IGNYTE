@@ -119,7 +119,7 @@ export const metadata: Metadata = {
     "twitter:creator": "@alphaonedefense",
     "article:publisher": "https://www.facebook.com/alphaonedefense",
   },
-    generator: 'v0.dev'
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
