@@ -180,7 +180,10 @@ const mockSecurityNews: NewsArticle[] = [
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-async function fetchWithRetry(url: string, maxRetries = 3): Promise<Response> {
+async function safeFetch(
+  url: string,
+  maxRetries = 3,
+): Promise<{ success: boolean; response?: Response; error?: string }> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetch(url, {
@@ -191,52 +194,26 @@ async function fetchWithRetry(url: string, maxRetries = 3): Promise<Response> {
         signal: AbortSignal.timeout(10000), // 10 second timeout
       })
 
-      // If successful or client error (not rate limit), return immediately
-      if (response.ok || (response.status >= 400 && response.status < 500 && response.status !== 429)) {
-        return response
-      }
-
-      // If rate limited (429), wait before retry
-      if (response.status === 429) {
-        const waitTime = Math.pow(2, attempt) * 1000 // Exponential backoff: 2s, 4s, 8s
-        console.log(`Rate limited (429). Waiting ${waitTime}ms before retry ${attempt}/${maxRetries}`)
-        await delay(waitTime)
-        continue
-      }
-
-      // For other server errors, wait briefly and retry
-      if (response.status >= 500) {
-        const waitTime = 1000 * attempt
-        console.log(`Server error (${response.status}). Waiting ${waitTime}ms before retry ${attempt}/${maxRetries}`)
-        await delay(waitTime)
-        continue
-      }
-
-      return response
+      // Return success for any response (we'll handle status codes in the caller)
+      return { success: true, response }
     } catch (error) {
       console.error(`Attempt ${attempt} failed:`, error)
 
-      if (error instanceof Error) {
-        if (error.name === "TimeoutError") {
-          console.log(`Request timeout on attempt ${attempt}/${maxRetries}`)
-        } else if (error.name === "AbortError") {
-          console.log(`Request aborted on attempt ${attempt}/${maxRetries}`)
+      if (attempt === maxRetries) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : "Unknown error",
         }
       }
 
-      if (attempt === maxRetries) {
-        throw new Error(
-          `API request failed after ${maxRetries} attempts: ${error instanceof Error ? error.message : "Unknown error"}`,
-        )
-      }
-
+      // Wait before retry
       const waitTime = 1000 * attempt
       console.log(`Waiting ${waitTime}ms before retry ${attempt + 1}/${maxRetries}`)
       await delay(waitTime)
     }
   }
 
-  throw new Error(`Failed after ${maxRetries} attempts`)
+  return { success: false, error: "Max retries exceeded" }
 }
 
 export async function fetchSecurityNews() {
@@ -268,26 +245,27 @@ export async function fetchSecurityNews() {
       }
 
       const query = queries[i]
-      try {
-        if (i > 0) {
-          console.log("Waiting 3 seconds between API calls...")
-          await delay(3000)
-        }
 
-        const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=15&apiKey=${apiKey}`
+      if (i > 0) {
+        console.log("Waiting 3 seconds between API calls...")
+        await delay(3000)
+      }
 
-        let response: Response
+      const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=15&apiKey=${apiKey}`
+
+      const fetchResult = await safeFetch(url, 3)
+
+      if (!fetchResult.success) {
+        console.error(`Failed to fetch query "${query}":`, fetchResult.error)
+        hasNetworkError = true
+        continue
+      }
+
+      const response = fetchResult.response!
+      console.log(`Query "${query}" response status:`, response.status)
+
+      if (response.ok) {
         try {
-          response = await fetchWithRetry(url, 3)
-        } catch (fetchError) {
-          console.error(`All retry attempts failed for query "${query}":`, fetchError)
-          hasNetworkError = true
-          continue
-        }
-
-        console.log(`Query "${query}" response status:`, response.status)
-
-        if (response.ok) {
           const data = await response.json()
           console.log(`Query "${query}" returned ${data.articles?.length || 0} articles`)
 
@@ -322,16 +300,16 @@ export async function fetchSecurityNews() {
             console.log(`Query "${query}" filtered to ${filteredArticles.length} relevant articles`)
             allArticles.push(...filteredArticles)
           }
-        } else if (response.status === 429) {
-          console.error(`Rate limit exceeded for query "${query}". Using existing articles and mock data.`)
-          rateLimitHit = true
-          break
-        } else {
-          console.error(`API call failed for query "${query}":`, response.status, response.statusText)
+        } catch (jsonError) {
+          console.error(`Failed to parse JSON for query "${query}":`, jsonError)
           continue
         }
-      } catch (queryError) {
-        console.error(`Error processing query "${query}":`, queryError)
+      } else if (response.status === 429) {
+        console.error(`Rate limit exceeded for query "${query}". Using existing articles and mock data.`)
+        rateLimitHit = true
+        break
+      } else {
+        console.error(`API call failed for query "${query}":`, response.status, response.statusText)
         continue
       }
     }
@@ -376,6 +354,7 @@ export async function fetchSecurityNews() {
     return { articles: uniqueArticles, error: null }
   } catch (err) {
     console.error("Unexpected error in fetchSecurityNews:", err)
+    console.error("Error stack:", err instanceof Error ? err.stack : "No stack trace")
 
     // Always return mock data as fallback - never let errors propagate
     return {
