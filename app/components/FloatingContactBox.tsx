@@ -92,9 +92,10 @@ export default function FloatingContactBox() {
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="rounded-full w-14 h-14 bg-[#92EBFF] text-background hover:bg-[#92EBFF]/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse hover:animate-none"
+              className="rounded-full w-16 h-16 bg-[#92EBFF] text-background hover:bg-[#92EBFF]/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse hover:animate-none flex flex-col items-center justify-center"
             >
-              <MessageCircle className="h-6 w-6" />
+              <MessageCircle className="h-5 w-5 mb-1" />
+              <span className="text-xs font-medium">Contact</span>
               <span className="sr-only">Open Contact Form</span>
             </Button>
           </motion.div>
