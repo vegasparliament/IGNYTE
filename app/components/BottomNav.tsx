@@ -1,14 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Home, Shield, User, Phone, Search } from "lucide-react"
+import { Home, Shield, Briefcase, Phone } from "lucide-react"
 import { Link as ScrollLink } from "react-scroll"
 
 const navItems = [
   { name: "Home", href: "home", icon: Home },
   { name: "Services", href: "services", icon: Shield },
-  { name: "About", href: "about", icon: User },
-  { name: "Requirements", href: "hiring-requirements", icon: Search },
+  { name: "Careers", href: "careers", icon: Briefcase },
 ]
 
 export default function BottomNav() {
@@ -70,10 +69,16 @@ export default function BottomNav() {
         </div>
       </nav>
       {isCallModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-          <div className="bg-background p-6 rounded-lg shadow-lg w-5/6 max-w-sm">
-            <h3 className="text-xl font-bold mb-4">Call Now 24/7</h3>
-            <p className="mb-4">Our support line is always available.</p>
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setIsCallModalOpen(false)}
+        >
+          <div
+            className="bg-background p-6 rounded-lg shadow-lg w-5/6 max-w-sm border border-[#92EBFF]/20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold mb-4 text-[#92EBFF]">Call Now 24/7</h3>
+            <p className="mb-4 text-muted-foreground">Our support line is always available.</p>
             <div className="flex flex-col space-y-2">
               <button
                 className="w-full py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
