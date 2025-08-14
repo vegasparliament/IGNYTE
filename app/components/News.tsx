@@ -319,42 +319,6 @@ export default function News() {
             Refresh Security News
           </Button>
         </div>
-
-        {/* Social Media Call-to-Action */}
-        <div className="text-center mt-8 p-6 bg-background/30 rounded-lg">
-          <h3 className="text-lg font-semibold mb-2">Stay Connected</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Follow Alpha One Defense for the latest security updates and industry insights
-          </p>
-          <div className="flex justify-center gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open("https://www.facebook.com/alphaonedefense", "_blank")}
-              className="bg-transparent"
-            >
-              <Facebook className="mr-2 h-4 w-4" />
-              Facebook
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open("https://x.com/alphaonedefense", "_blank")}
-              className="bg-transparent"
-            >
-              <Twitter className="mr-2 h-4 w-4" />X
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open("https://www.linkedin.com/company/alpha-one-defense", "_blank")}
-              className="bg-transparent"
-            >
-              <Linkedin className="mr-2 h-4 w-4" />
-              LinkedIn
-            </Button>
-          </div>
-        </div>
       </div>
     </section>
   )
