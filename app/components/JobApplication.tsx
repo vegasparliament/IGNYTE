@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -82,7 +84,27 @@ export default function JobApplication({ isOpen, onClose }: JobApplicationProps)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setResumeFile(e.target.files[0])
+      const file = e.target.files[0]
+      const maxSize = 10 * 1024 * 1024 // 10MB in bytes
+
+      if (file.size > maxSize) {
+        toast.error("File size must be less than 10MB")
+        return
+      }
+
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ]
+
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Please upload a PDF, DOC, or DOCX file")
+        return
+      }
+
+      setResumeFile(file)
+      toast.success(`File "${file.name}" selected successfully`)
     }
   }
 
@@ -90,25 +112,42 @@ export default function JobApplication({ isOpen, onClose }: JobApplicationProps)
     e.preventDefault()
     setIsSubmitting(true)
 
-    const formDataToSend = new FormData()
-    Object.entries(formData).forEach(([key, value]) => {
-      formDataToSend.append(key, value)
-    })
-    if (resumeFile) {
-      formDataToSend.append("resume", resumeFile)
-    }
-    formDataToSend.append("_subject", "AOD Job Application Submission")
-    formDataToSend.append("_replyto", formData.email)
-    formDataToSend.append("_cc", "remus@alphaonedefense.com, joe@alphaonedefense.com")
-
     try {
+      const formDataToSend = new FormData()
+
+      // Add all form fields
+      formDataToSend.append("firstName", formData.firstName)
+      formDataToSend.append("lastName", formData.lastName)
+      formDataToSend.append("email", formData.email)
+      formDataToSend.append("phone", formData.phone)
+      formDataToSend.append("position", formData.position)
+      formDataToSend.append("experience", formData.experience)
+      formDataToSend.append("certifications", formData.certifications)
+      formDataToSend.append("coverLetter", formData.coverLetter)
+
+      // Add resume file if present
+      if (resumeFile) {
+        formDataToSend.append("resume", resumeFile, resumeFile.name)
+      }
+
+      // Add Formspree configuration
+      formDataToSend.append(
+        "_subject",
+        `Job Application: ${formData.position} - ${formData.firstName} ${formData.lastName}`,
+      )
+      formDataToSend.append("_replyto", formData.email)
+      formDataToSend.append("_cc", "remus@alphaonedefense.com,joe@alphaonedefense.com")
+
       const response = await fetch("https://formspree.io/f/xanqbygv", {
         method: "POST",
         body: formDataToSend,
+        headers: {
+          Accept: "application/json",
+        },
       })
 
       if (response.ok) {
-        toast.success("Application submitted successfully!")
+        toast.success("Application submitted successfully! We'll review your application within 24 hours.")
         setFormData({
           firstName: "",
           lastName: "",
@@ -124,25 +163,14 @@ export default function JobApplication({ isOpen, onClose }: JobApplicationProps)
         onClose()
       } else {
         const errorData = await response.json()
-        toast.error(errorData.error || "There was an error submitting your application. Please try again.")
+        console.error("Submission error:", errorData)
+        toast.error("There was an error submitting your application. Please try again or contact us directly.")
       }
     } catch (error) {
       console.error("Application submission error:", error)
-      // Change error message to success message
-      toast.success("Application submitted successfully!")
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        position: "",
-        experience: "",
-        certifications: "",
-        coverLetter: "",
-      })
-      setSelectedPosition("")
-      setResumeFile(null)
-      onClose()
+      toast.error("There was an error submitting your application. Please try again or contact us directly.")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -288,7 +316,7 @@ export default function JobApplication({ isOpen, onClose }: JobApplicationProps)
                   </div>
 
                   <div>
-                    <Label htmlFor="resume">Resume</Label>
+                    <Label htmlFor="resume">Resume (Required)</Label>
                     <div className="mt-1">
                       <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer border-[#92EBFF]/20 hover:border-[#92EBFF]/40 transition-colors">
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -308,7 +336,12 @@ export default function JobApplication({ isOpen, onClose }: JobApplicationProps)
                         />
                       </label>
                       {resumeFile && (
-                        <p className="mt-2 text-sm text-muted-foreground">Selected file: {resumeFile.name}</p>
+                        <div className="mt-2 p-2 bg-[#92EBFF]/10 rounded border border-[#92EBFF]/20">
+                          <p className="text-sm font-medium text-[#92EBFF]">Selected file: {resumeFile.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Size: {(resumeFile.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        </div>
                       )}
                     </div>
                   </div>
