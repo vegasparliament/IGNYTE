@@ -178,6 +178,9 @@ const mockSecurityNews: NewsArticle[] = [
   },
 ]
 
+// Add delay between API calls to avoid rate limiting
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export async function fetchSecurityNews() {
   console.log("fetchSecurityNews called - server action executing")
 
@@ -192,19 +195,19 @@ export async function fetchSecurityNews() {
       return { articles: mockSecurityNews, error: null }
     }
 
-    const queries = [
-      "cybersecurity+USA",
-      "data+breach+United+States",
-      "security+vulnerability+national",
-      "cyber+attack+Ohio",
-      "ransomware+USA",
-      "malware+United+States",
-    ]
+    const queries = ["cybersecurity+USA+OR+Ohio", "data+breach+United+States", "ransomware+malware+USA"]
     const allArticles: NewsArticle[] = []
 
     console.log("Starting API calls for", queries.length, "queries")
 
-    for (const query of queries) {
+    for (let i = 0; i < queries.length; i++) {
+      const query = queries[i]
+
+      // Add delay between requests to avoid rate limiting
+      if (i > 0) {
+        await delay(1000) // 1 second delay between requests
+      }
+
       try {
         const url = `https://newsapi.org/v2/everything?q=${query}&language=en&domains=reuters.com,apnews.com,cnn.com,foxnews.com,nbcnews.com,abcnews.go.com,cbsnews.com,usatoday.com,washingtonpost.com,nytimes.com,wsj.com,bloomberg.com,techcrunch.com,wired.com,arstechnica.com,zdnet.com,securityweek.com,darkreading.com,krebsonsecurity.com,bleepingcomputer.com,threatpost.com,cyberscoop.com,recordedfuture.com,fireeye.com,crowdstrike.com,ohio.gov,10tv.com,nbc4i.com,abc6onyourside.com,fox8.com,news5cleveland.com,whio.com,daytondailynews.com,dispatch.com,cleveland.com,cincinnati.com,toledo.com&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`
 
@@ -216,6 +219,11 @@ export async function fetchSecurityNews() {
         })
 
         console.log(`Query "${query}" response status:`, response.status)
+
+        if (response.status === 429) {
+          console.log(`Rate limit hit for query "${query}", skipping remaining queries`)
+          break // Stop making more requests if rate limited
+        }
 
         if (response.ok) {
           const data = await response.json()
@@ -257,6 +265,11 @@ export async function fetchSecurityNews() {
         }
       } catch (queryError) {
         console.error(`Error fetching query "${query}":`, queryError)
+        // If we get a 429, stop making more requests
+        if (queryError instanceof Error && queryError.message.includes("429")) {
+          console.log("Rate limit hit, stopping additional requests")
+          break
+        }
       }
     }
 
@@ -270,9 +283,9 @@ export async function fetchSecurityNews() {
 
     console.log("Final unique articles:", uniqueArticles.length)
 
-    // If no articles found, use mock data
+    // If no articles found or rate limited, use mock data
     if (uniqueArticles.length === 0) {
-      console.log("No articles found, using mock data")
+      console.log("No articles found or rate limited, using mock data")
       return { articles: mockSecurityNews, error: null }
     }
 
