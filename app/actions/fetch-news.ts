@@ -243,16 +243,24 @@ export async function fetchSecurityNews() {
   console.log("fetchSecurityNews called - server action executing")
 
   try {
-    // Using NewsAPI - API key is now server-side only
-    const apiKey = process.env.NEWS_API_KEY
+    const apiKey = process.env.NEWS_API_KEY || process.env.NEXT_PUBLIC_NEWS_API_KEY
     console.log("API Key available:", !!apiKey)
+    console.log("Environment check - NEWS_API_KEY exists:", !!process.env.NEWS_API_KEY)
+    console.log("Environment check - NEXT_PUBLIC_NEWS_API_KEY exists:", !!process.env.NEXT_PUBLIC_NEWS_API_KEY)
 
-    if (!apiKey) {
-      console.log("No API key found, using mock data")
-      // Fallback to mock data if no API key
+    if (!apiKey || apiKey.trim() === "") {
+      console.log("No valid API key found, using mock data")
       return {
         articles: mockSecurityNews,
         error: "API key not configured. Showing recent security updates from our archives.",
+      }
+    }
+
+    if (apiKey.length < 10) {
+      console.log("API key appears invalid (too short), using mock data")
+      return {
+        articles: mockSecurityNews,
+        error: "Invalid API key configuration. Showing recent security updates from our archives.",
       }
     }
 
@@ -260,7 +268,7 @@ export async function fetchSecurityNews() {
     const allArticles: NewsArticle[] = []
     let rateLimitHit = false
 
-    console.log("Starting API calls for", queries.length, "queries")
+    console.log("Starting API calls for", queries.length, "queries with valid API key")
 
     for (let i = 0; i < queries.length; i++) {
       if (rateLimitHit) {
@@ -380,12 +388,17 @@ export async function fetchSecurityNews() {
     let errorMessage = "Unable to fetch latest news. Showing recent security updates from our archives."
 
     if (err instanceof Error) {
-      if (err.message.includes("429") || err.message.includes("rate limit")) {
+      const errorMsg = err.message.toLowerCase()
+      if (errorMsg.includes("429") || errorMsg.includes("rate limit")) {
         errorMessage = "News API rate limit reached. Showing recent security updates from our archives."
-      } else if (err.message.includes("timeout") || err.message.includes("AbortError")) {
+      } else if (errorMsg.includes("timeout") || errorMsg.includes("aborterror")) {
         errorMessage = "News service temporarily unavailable. Showing recent security updates from our archives."
-      } else if (err.message.includes("network") || err.message.includes("fetch")) {
+      } else if (errorMsg.includes("network") || errorMsg.includes("fetch")) {
         errorMessage = "Network connectivity issue. Showing recent security updates from our archives."
+      } else if (errorMsg.includes("unauthorized") || errorMsg.includes("401")) {
+        errorMessage = "API authentication failed. Showing recent security updates from our archives."
+      } else if (errorMsg.includes("forbidden") || errorMsg.includes("403")) {
+        errorMessage = "API access denied. Showing recent security updates from our archives."
       }
     }
 
