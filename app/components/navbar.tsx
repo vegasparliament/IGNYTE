@@ -6,7 +6,6 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
@@ -24,10 +23,15 @@ export default function Navbar() {
       section.scrollIntoView({ behavior: "smooth" })
     }
   }, [])
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center space-x-3">
           <Image
             src="/ace-logo-mark.png"
             alt="ACE Background Check"
@@ -36,30 +40,20 @@ export default function Navbar() {
             priority
             className="w-auto h-8"
           />
+          <span className="text-xl font-bold text-foreground">ACE Background Check</span>
         </Link>
         {/* Hide desktop navigation on mobile */}
         <NavigationMenu className="hidden md:block">
           <NavigationMenuList>
             <NavigationMenuItem>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={scrollToTop}>
+                Home
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
               <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => scrollToSection("services")}>
                 Services
               </NavigationMenuLink>
-              <NavigationMenuContent>
-                <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                  <ListItem href="/services/nationwide-background-check" title="Nationwide Background Check">
-                    Comprehensive national background screening
-                  </ListItem>
-                  <ListItem href="/services/ohio-tenant-screening" title="Ohio Tenant Screening">
-                    Thorough screening for Ohio landlords
-                  </ListItem>
-                  <ListItem href="/services/past-address-ssn-verification" title="Past Address/SSN Verification">
-                    Verify residence history and SSN
-                  </ListItem>
-                  <ListItem href="/services/personal-reference-verification" title="Personal Reference Verification">
-                    Validate personal references
-                  </ListItem>
-                </ul>
-              </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => scrollToSection("pricing")}>
@@ -67,8 +61,19 @@ export default function Navbar() {
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => scrollToSection("about")}>
-                About
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                onClick={() => scrollToSection("industries")}
+              >
+                Industries
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                onClick={() => scrollToSection("testimonials")}
+              >
+                Testimonials
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
@@ -86,15 +91,12 @@ export default function Navbar() {
           <Button variant="ghost" onClick={() => window.open("https://preview--v4-3-acepro-x.lovable.app/", "_blank")}>
             Sign In
           </Button>
-          <Button className="glow" onClick={() => scrollToSection("get-started-today")}>
-            Get Started
-          </Button>
           <Button
             variant="outline"
             className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors bg-transparent"
             onClick={() => (window.location.href = "tel:18007319221")}
           >
-            <Phone className="mr-2 h-4 w-4" /> Call Us: 1 (800) 731-9221
+            <Phone className="mr-2 h-4 w-4" /> 1 (800) 731-9221
           </Button>
         </div>
       </div>

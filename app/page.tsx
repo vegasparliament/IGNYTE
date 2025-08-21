@@ -125,7 +125,7 @@ export default function HomePage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button size="lg" className="text-lg glow" onClick={scrollToGetStarted}>
-                    Get Started
+                    Get Quote
                   </Button>
                   <Button size="lg" variant="secondary" className="text-lg" onClick={scrollToPricing}>
                     View Pricing
@@ -547,7 +547,7 @@ export default function HomePage() {
         <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Features Section */}
-        <section className="py-24">
+        <section id="features" className="py-24">
           <div className="container px-4 mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">Why Choose Us</h2>
@@ -595,7 +595,7 @@ export default function HomePage() {
         <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* How It Works Section */}
-        <section className="py-24">
+        <section id="how-it-works" className="py-24">
           <div className="container px-4 mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">How It Works</h2>
@@ -628,7 +628,7 @@ export default function HomePage() {
         <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Industries We Serve */}
-        <div>
+        <div id="industries">
           <IndustriesSection />
         </div>
 
@@ -644,7 +644,7 @@ export default function HomePage() {
         <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Testimonials Section */}
-        <div>
+        <div id="testimonials">
           <Testimonials />
         </div>
 
@@ -656,7 +656,7 @@ export default function HomePage() {
           <div className="container px-4 mx-auto">
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold mb-4">Get Started Today</h2>
+                <h2 className="text-3xl font-bold mb-4">Get Your Quote Today</h2>
                 <p className="text-muted-foreground">
                   Fill out the form below and one of our experts will contact you within 24 hours
                 </p>
