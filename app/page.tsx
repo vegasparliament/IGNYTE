@@ -61,9 +61,9 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-grid opacity-20" />
           <div className="container px-4 mx-auto relative z-10">
             <div className="flex flex-col lg:flex-row items-center gap-12">
-              <div className="flex-1 text-center lg:text-left">
+              <div className="flex-1 text-center">
                 {/* Logo */}
-                <div className="mb-8 flex justify-center lg:justify-start">
+                <div className="mb-8 flex justify-center">
                   <Image
                     src="/ace-logo.png"
                     alt="ACE Background Check"
@@ -77,14 +77,14 @@ export default function HomePage() {
                 <div className="inline-flex items-center rounded-full border border-border/50 bg-secondary/50 px-3 py-1 text-sm backdrop-blur-sm mb-4">
                   Trusted by 10,000+ companies worldwide
                 </div>
-                <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6">
+                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight mb-6">
                   Comprehensive Background <span className="text-primary">Screening Solutions</span>
                 </h1>
-                <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto lg:mx-0">
+                <p className="text-base text-muted-foreground mb-8 max-w-2xl mx-auto">
                   From pre-employment checks to ongoing monitoring, we provide accurate, compliant, and timely
                   background screening services for businesses of all sizes.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button size="lg" className="text-lg glow" onClick={scrollToGetStarted}>
                     Get Started
                   </Button>
