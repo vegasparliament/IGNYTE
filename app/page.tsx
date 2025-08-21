@@ -788,21 +788,23 @@ export default function HomePage() {
 
         {/* Footer */}
         <footer className="bg-neutral-900 text-neutral-200">
-          <div className="container px-4 mx-auto py-16">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="container px-4 mx-auto py-12">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div>
-                <div className="flex items-center mb-4">
+                <div className="flex items-center mb-3">
                   <Image
                     src="/ace-logo-mark.png"
                     alt="ACE Background Check"
                     width={120}
                     height={40}
-                    className="w-auto h-8 mr-3"
+                    className="w-auto h-6 mr-2"
                   />
-                  <h3 className="text-xl font-bold">Ace Background Check</h3>
+                  <h3 className="text-lg font-bold">Ace Background Check</h3>
                 </div>
-                <p className="text-neutral-400">Leading provider of comprehensive background screening solutions.</p>
-                <div className="mt-4 flex space-x-4">
+                <p className="text-neutral-400 text-sm">
+                  Leading provider of comprehensive background screening solutions.
+                </p>
+                <div className="mt-3 flex space-x-4">
                   <a href="#" className="text-neutral-500 hover:text-neutral-300">
                     {/* Facebook icon */}
                   </a>
@@ -815,85 +817,85 @@ export default function HomePage() {
                 </div>
               </div>
               <div>
-                <h4 className="font-semibold mb-4">Services</h4>
-                <ul className="space-y-2">
+                <h4 className="font-semibold mb-3 text-sm">Services</h4>
+                <ul className="space-y-1">
                   <li>
-                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Background Checks
                     </Link>
                   </li>
                   <li>
-                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Criminal Records
                     </Link>
                   </li>
                   <li>
-                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Employment Verification
                     </Link>
                   </li>
                   <li>
-                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Education Verification
                     </Link>
                   </li>
                   <li>
-                    <Link href="/solutions/enterprise" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="/solutions/enterprise" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Enterprise Solutions
                     </Link>
                   </li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold mb-4">Company</h4>
-                <ul className="space-y-2">
+                <h4 className="font-semibold mb-3 text-sm">Company</h4>
+                <ul className="space-y-1">
                   <li>
-                    <Link href="#about" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#about" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       About Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="#about#careers" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#about#careers" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Careers
                     </Link>
                   </li>
                   <li>
-                    <Link href="#about#press" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#about#press" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Press
                     </Link>
                   </li>
                   <li>
-                    <Link href="/blog" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="/blog" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Blog
                     </Link>
                   </li>
                   <li>
-                    <Link href="#contact" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#contact" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Contact
                     </Link>
                   </li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold mb-4">Legal</h4>
-                <ul className="space-y-2">
+                <h4 className="font-semibold mb-3 text-sm">Legal</h4>
+                <ul className="space-y-1">
                   <li>
-                    <Link href="#" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Privacy Policy
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Terms of Service
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       Cookie Policy
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" className="text-neutral-400 hover:text-neutral-200">
+                    <Link href="#" className="text-neutral-400 hover:text-neutral-200 text-xs">
                       FCRA Compliance
                     </Link>
                   </li>
@@ -902,7 +904,7 @@ export default function HomePage() {
                       href="https://preview--v4-3-acepro-x.lovable.app/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-neutral-400 hover:text-neutral-200"
+                      className="text-neutral-400 hover:text-neutral-200 text-xs"
                     >
                       Sign In
                     </a>
@@ -910,8 +912,21 @@ export default function HomePage() {
                 </ul>
               </div>
             </div>
-            <div className="border-t border-neutral-800 mt-12 pt-8 text-center text-neutral-400">
-              <p>&copy; {new Date().getFullYear()} Ace Background Check. All rights reserved.</p>
+            <div className="border-t border-neutral-800 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+              <p className="text-neutral-400 text-xs mb-2 md:mb-0">
+                &copy; {new Date().getFullYear()} Ace Background Check. All rights reserved.
+              </p>
+              <p className="text-neutral-500 text-xs">
+                Developed by:{" "}
+                <a
+                  href="https://ignyte.media"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/80 transition-colors"
+                >
+                  Ignyte Media
+                </a>
+              </p>
             </div>
           </div>
         </footer>

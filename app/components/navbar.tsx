@@ -66,6 +66,19 @@ export default function Navbar() {
                 Pricing
               </NavigationMenuLink>
             </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => scrollToSection("about")}>
+                About
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                onClick={() => scrollToSection("get-started-today")}
+              >
+                Contact
+              </NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
         {/* Hide desktop buttons on mobile */}
