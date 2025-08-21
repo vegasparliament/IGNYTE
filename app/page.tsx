@@ -57,6 +57,16 @@ export default function HomePage() {
   useEffect(() => {
     const dividers = document.querySelectorAll(".section-divider")
 
+    // Check if user prefers reduced motion
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    if (prefersReducedMotion) {
+      dividers.forEach((divider) => {
+        divider.classList.add("no-animation")
+      })
+      return
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -125,8 +135,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
         {/* Animated Section Divider */}
-        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
+        <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Services Section */}
         <section id="services" className="py-24">
@@ -531,8 +542,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
         {/* Animated Section Divider */}
-        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
+        <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Features Section */}
         <section className="py-24">
@@ -578,8 +590,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
         {/* Animated Section Divider */}
-        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
+        <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* How It Works Section */}
         <section className="py-24">
@@ -610,29 +623,33 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
         {/* Animated Section Divider */}
-        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
+        <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Industries We Serve */}
         <div>
           <IndustriesSection />
         </div>
+
         {/* Animated Section Divider */}
-        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
+        <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Pricing Section */}
         <div id="pricing" ref={pricingRef}>
           <PricingPlans />
         </div>
+
         {/* Animated Section Divider */}
-        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
+        <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Testimonials Section */}
         <div>
           <Testimonials />
         </div>
+
         {/* Animated Section Divider */}
-        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
+        <div className="section-divider mx-auto max-w-6xl"></div>
 
         {/* Contact Form Section */}
         <section id="get-started-today" className="py-24" ref={getStartedRef}>

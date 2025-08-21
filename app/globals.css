@@ -205,73 +205,81 @@
 /* Animated Section Dividers */
 @keyframes dividerGlow {
   0% {
-    opacity: 0.3;
-    transform: scaleX(0.8);
+    transform: translateX(-100%);
+    opacity: 0;
   }
   50% {
-    opacity: 0.6;
-    transform: scaleX(1);
+    opacity: 1;
   }
   100% {
-    opacity: 0.3;
-    transform: scaleX(0.8);
+    transform: translateX(100%);
+    opacity: 0;
   }
 }
 
 @keyframes dividerSlide {
   0% {
-    transform: translateX(-100%);
+    transform: scaleX(0);
     opacity: 0;
   }
-  50% {
-    opacity: 0.6;
-  }
   100% {
-    transform: translateX(0);
-    opacity: 0.3;
+    transform: scaleX(1);
+    opacity: 1;
   }
 }
 
 @keyframes dividerPulse {
   0%,
   100% {
-    opacity: 0.3;
     box-shadow: 0 0 0 0 hsl(35 65% 45% / 0.1);
   }
   50% {
-    opacity: 0.6;
-    box-shadow: 0 0 20px 0 hsl(35 65% 45% / 0.2);
+    box-shadow: 0 0 20px 0 hsl(35 65% 45% / 0.3);
   }
 }
 
 .section-divider {
   position: relative;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(35 65% 45% / 0.6), transparent);
+  border: none;
+  margin: 2rem auto;
   overflow: hidden;
-  animation: dividerSlide 1.5s ease-out;
+  transform: scaleX(0);
+  transform-origin: center;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
 .section-divider::before {
   content: "";
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, hsl(35 65% 45% / 0.3), transparent);
+  background: linear-gradient(90deg, transparent, hsl(35 65% 45% / 0.8), transparent);
+  transform: translateX(-100%);
   animation: dividerGlow 3s ease-in-out infinite;
+}
+
+.section-divider.animate-in {
+  animation: dividerSlide 1s ease-out forwards;
 }
 
 .section-divider:hover {
-  animation: dividerPulse 1s ease-in-out;
+  animation: dividerPulse 1s ease-in-out infinite;
 }
 
-/* Intersection Observer triggered animations */
-.section-divider.animate-in {
-  animation: dividerSlide 1.5s ease-out;
+.section-divider:hover::before {
+  animation: dividerGlow 1.5s ease-in-out infinite;
 }
 
-.section-divider.animate-in::before {
-  animation: dividerGlow 3s ease-in-out infinite;
+/* Fallback for browsers that don't support the animations */
+.section-divider.no-animation {
+  transform: scaleX(1);
+  opacity: 1;
+  background: hsl(35 65% 45% / 0.4);
 }
 
 /* Reduced motion preferences */
@@ -279,6 +287,12 @@
   .section-divider,
   .section-divider::before {
     animation: none;
+  }
+
+  .section-divider {
+    transform: scaleX(1);
+    opacity: 1;
+    background: hsl(35 65% 45% / 0.4);
   }
 
   .section-divider:hover {
