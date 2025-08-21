@@ -97,7 +97,7 @@ export default function HomePage() {
           </div>
         </section>
         {/* Section Divider */}
-        <div className="border-t border-border/20"></div>
+        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Services Section */}
         <section id="services" className="py-24">
@@ -503,7 +503,7 @@ export default function HomePage() {
           </div>
         </section>
         {/* Section Divider */}
-        <div className="border-t border-border/20"></div>
+        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Features Section */}
         <section className="py-24">
@@ -550,7 +550,7 @@ export default function HomePage() {
           </div>
         </section>
         {/* Section Divider */}
-        <div className="border-t border-border/20"></div>
+        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* How It Works Section */}
         <section className="py-24">
@@ -582,28 +582,28 @@ export default function HomePage() {
           </div>
         </section>
         {/* Section Divider */}
-        <div className="border-t border-border/20"></div>
+        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Industries We Serve */}
         <div>
           <IndustriesSection />
         </div>
         {/* Section Divider */}
-        <div className="border-t border-border/20"></div>
+        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Pricing Section */}
         <div id="pricing" ref={pricingRef}>
           <PricingPlans />
         </div>
         {/* Section Divider */}
-        <div className="border-t border-border/20"></div>
+        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Testimonials Section */}
         <div>
           <Testimonials />
         </div>
         {/* Section Divider */}
-        <div className="border-t border-border/20"></div>
+        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Contact Form Section */}
         <section id="get-started-today" className="py-24" ref={getStartedRef}>
