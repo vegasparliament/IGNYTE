@@ -34,7 +34,7 @@ import Testimonials from "./components/testimonials"
 import PricingPlans from "./components/pricing-plans"
 import ServiceCard from "./components/service-card"
 import IndustriesSection from "./components/industries-section"
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { ToastProvider } from "@/components/ui/toast"
 import ChatWidgetWrapper from "./components/chat-widget-wrapper"
@@ -52,6 +52,35 @@ export default function HomePage() {
   const scrollToPricing = () => {
     pricingRef.current?.scrollIntoView({ behavior: "smooth" })
   }
+
+  // Intersection Observer for animated dividers
+  useEffect(() => {
+    const dividers = document.querySelectorAll(".section-divider")
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-in")
+          }
+        })
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "50px 0px -50px 0px",
+      },
+    )
+
+    dividers.forEach((divider) => {
+      observer.observe(divider)
+    })
+
+    return () => {
+      dividers.forEach((divider) => {
+        observer.unobserve(divider)
+      })
+    }
+  }, [])
 
   return (
     <ToastProvider>
@@ -96,8 +125,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        {/* Section Divider */}
-        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
+        {/* Animated Section Divider */}
+        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Services Section */}
         <section id="services" className="py-24">
@@ -502,8 +531,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        {/* Section Divider */}
-        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
+        {/* Animated Section Divider */}
+        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Features Section */}
         <section className="py-24">
@@ -549,8 +578,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        {/* Section Divider */}
-        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
+        {/* Animated Section Divider */}
+        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* How It Works Section */}
         <section className="py-24">
@@ -581,29 +610,29 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        {/* Section Divider */}
-        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
+        {/* Animated Section Divider */}
+        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Industries We Serve */}
         <div>
           <IndustriesSection />
         </div>
-        {/* Section Divider */}
-        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
+        {/* Animated Section Divider */}
+        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Pricing Section */}
         <div id="pricing" ref={pricingRef}>
           <PricingPlans />
         </div>
-        {/* Section Divider */}
-        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
+        {/* Animated Section Divider */}
+        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Testimonials Section */}
         <div>
           <Testimonials />
         </div>
-        {/* Section Divider */}
-        <div className="border-t border-border/30 mx-auto max-w-6xl"></div>
+        {/* Animated Section Divider */}
+        <div className="section-divider border-t border-border/30 mx-auto max-w-6xl"></div>
 
         {/* Contact Form Section */}
         <section id="get-started-today" className="py-24" ref={getStartedRef}>
