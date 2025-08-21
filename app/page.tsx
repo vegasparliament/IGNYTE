@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import {
+  MessageCircle,
   CheckCircle,
   Clock,
   Shield,
   Search,
+  FileCheck,
   Home,
   MapPin,
   UserCheck,
@@ -24,8 +25,6 @@ import {
   Gavel,
   Skull,
   FileSignature,
-  Users,
-  Star,
 } from "lucide-react"
 import Link from "next/link"
 import type React from "react"
@@ -55,126 +54,38 @@ export default function HomePage() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative py-20 px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <Badge variant="secondary" className="mb-4">
-                Trusted by 10,000+ Companies
-              </Badge>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                Professional Background Screening Solutions
-              </h1>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                Comprehensive, accurate, and compliant background checks for businesses of all sizes. Protect your
-                organization with our industry-leading screening services.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-primary hover:bg-primary/90" onClick={scrollToGetStarted}>
-                  Get Started Today
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-black bg-transparent"
-                  onClick={scrollToPricing}
-                >
-                  View Pricing
-                </Button>
+        <section className="relative pt-32 pb-24 overflow-hidden">
+          <div className="absolute inset-0 bg-grid opacity-20" />
+          <div className="container px-4 mx-auto relative z-10">
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="flex-1 text-center lg:text-left">
+                <div className="inline-flex items-center rounded-full border border-border/50 bg-secondary/50 px-3 py-1 text-sm backdrop-blur-sm mb-4">
+                  Trusted by 10,000+ companies worldwide
+                </div>
+                <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6">
+                  Comprehensive Background <span className="text-primary">Screening Solutions</span>
+                </h1>
+                <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto lg:mx-0">
+                  From pre-employment checks to ongoing monitoring, we provide accurate, compliant, and timely
+                  background screening services for businesses of all sizes.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <Button size="lg" className="text-lg glow" onClick={scrollToGetStarted}>
+                    Get Started
+                  </Button>
+                  <Button size="lg" variant="secondary" className="text-lg" onClick={scrollToPricing}>
+                    View Pricing
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="py-20 px-4 bg-background">
-          <div className="container px-4 mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Why Choose Ace Background Check?</h2>
-              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-                Industry-leading technology, unmatched accuracy, and exceptional customer service
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <Card className="bg-card/80 backdrop-blur-sm border-border">
-                <CardHeader>
-                  <Shield className="h-12 w-12 text-primary mb-4" />
-                  <CardTitle className="text-white">Comprehensive Screening</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300">
-                    Criminal history, employment verification, education checks, and more - all in one platform
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border">
-                <CardHeader>
-                  <Clock className="h-12 w-12 text-primary mb-4" />
-                  <CardTitle className="text-white">Fast Turnaround</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300">
-                    Most background checks completed within 24-48 hours with real-time status updates
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border">
-                <CardHeader>
-                  <Users className="h-12 w-12 text-primary mb-4" />
-                  <CardTitle className="text-white">FCRA Compliant</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300">
-                    Fully compliant with federal and state regulations, ensuring legal protection
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border">
-                <CardHeader>
-                  <Award className="h-12 w-12 text-primary mb-4" />
-                  <CardTitle className="text-white">Industry Expertise</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300">
-                    Over 15 years of experience serving businesses across all industries
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border">
-                <CardHeader>
-                  <CheckCircle className="h-12 w-12 text-primary mb-4" />
-                  <CardTitle className="text-white">Accurate Results</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300">
-                    99.8% accuracy rate with comprehensive quality assurance processes
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border">
-                <CardHeader>
-                  <Star className="h-12 w-12 text-primary mb-4" />
-                  <CardTitle className="text-white">24/7 Support</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300">
-                    Dedicated customer support team available around the clock
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
         {/* Services Section */}
-        <section id="services" className="py-24 bg-background">
+        <section id="services" className="py-24">
           <div className="container px-4 mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">Our Comprehensive Services</h2>
@@ -577,121 +488,98 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Additional Services Section */}
-        <section className="py-20 px-4 bg-black/20">
-          <div className="max-w-6xl mx-auto">
+        {/* Features Section */}
+        <section className="py-24">
+          <div className="container px-4 mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Our Services</h2>
-              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-                Comprehensive background screening solutions tailored to your needs
+              <h2 className="text-3xl font-bold mb-4">Why Choose Us</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Industry-leading accuracy, lightning-fast results, and dedicated support make us the trusted choice for
+                background screening.
               </p>
             </div>
-
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <Card className="bg-card/80 backdrop-blur-sm border-border hover:bg-card/90 transition-colors">
-                <CardHeader>
-                  <CardTitle className="text-white">Criminal Background Checks</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300 mb-4">
-                    Comprehensive criminal history searches at county, state, and federal levels
-                  </CardDescription>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
+              <FeatureCard
+                icon={<Clock className="w-12 h-12 text-primary" />}
+                title="Quick Results"
+                description="Get comprehensive results within 24-48 hours, with some checks available instantly"
+              />
+              <FeatureCard
+                icon={<Shield className="w-12 h-12 text-primary" />}
+                title="FCRA Compliant"
+                description="All our processes strictly adhere to Fair Credit Reporting Act guidelines"
+              />
+              <FeatureCard
+                icon={<Search className="w-12 h-12 text-primary" />}
+                title="Thorough Search"
+                description="Access to nationwide databases, court records, and international sources"
+              />
+              <FeatureCard
+                icon={<FileCheck className="w-12 h-12 text-primary" />}
+                title="Easy Reports"
+                description="Clear, detailed reports in a simple format, accessible via our user-friendly dashboard"
+              />
+              <FeatureCard
+                icon={<CheckCircle className="w-12 h-12 text-primary" />}
+                title="Accuracy Guaranteed"
+                description="Double verification on all important findings, ensuring the highest level of accuracy"
+              />
+              <FeatureCard
+                icon={<MessageCircle className="w-12 h-12 text-primary" />}
+                title="24/7 Support"
+                description="Dedicated team ready to help anytime, with live chat, phone, and email support"
+              />
+            </div>
+          </div>
+        </section>
 
-              <Card className="bg-card/80 backdrop-blur-sm border-border hover:bg-card/90 transition-colors">
-                <CardHeader>
-                  <CardTitle className="text-white">Employment Verification</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300 mb-4">
-                    Verify employment history, job titles, dates of employment, and salary information
-                  </CardDescription>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border hover:bg-card/90 transition-colors">
-                <CardHeader>
-                  <CardTitle className="text-white">Education Verification</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300 mb-4">
-                    Confirm degrees, certifications, and educational achievements
-                  </CardDescription>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border hover:bg-card/90 transition-colors">
-                <CardHeader>
-                  <CardTitle className="text-white">Reference Checks</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300 mb-4">
-                    Professional reference verification and character assessments
-                  </CardDescription>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border hover:bg-card/90 transition-colors">
-                <CardHeader>
-                  <CardTitle className="text-white">Drug Testing</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300 mb-4">
-                    Pre-employment and random drug screening services
-                  </CardDescription>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card/80 backdrop-blur-sm border-border hover:bg-card/90 transition-colors">
-                <CardHeader>
-                  <CardTitle className="text-white">Credit Checks</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-300 mb-4">
-                    Financial responsibility verification for positions handling money
-                  </CardDescription>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
+        {/* How It Works Section */}
+        <section className="py-24">
+          <div className="container px-4 mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">How It Works</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Our streamlined process makes background checks simple and efficient for your business.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <ProcessStep number={1} title="Sign Up" description="Create an account and choose your service package" />
+              <ProcessStep
+                number={2}
+                title="Submit Request"
+                description="Enter candidate information and select desired checks"
+              />
+              <ProcessStep
+                number={3}
+                title="We Investigate"
+                description="Our team conducts thorough background checks"
+              />
+              <ProcessStep
+                number={4}
+                title="Get Results"
+                description="Receive detailed reports via our secure platform"
+              />
             </div>
           </div>
         </section>
 
         {/* Industries We Serve */}
-        <div className="bg-background">
+        <div>
           <IndustriesSection />
         </div>
 
         {/* Pricing Section */}
-        <div id="pricing" className="bg-background" ref={pricingRef}>
+        <div id="pricing" ref={pricingRef}>
           <PricingPlans />
         </div>
 
         {/* Testimonials Section */}
-        <div className="bg-background">
+        <div>
           <Testimonials />
         </div>
 
         {/* Contact Form Section */}
-        <section id="get-started-today" className="py-24 bg-background" ref={getStartedRef}>
+        <section id="get-started-today" className="py-24" ref={getStartedRef}>
           <div className="container px-4 mx-auto">
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
@@ -821,28 +709,6 @@ export default function HomePage() {
                   </form>
                 </CardContent>
               </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 px-4 bg-background">
-          <div className="container px-4 mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Ready to Get Started?</h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of companies who trust Ace Background Check for their screening needs
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-primary hover:bg-primary/90">
-                Start Your First Check
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-black bg-transparent"
-              >
-                Contact Sales
-              </Button>
             </div>
           </div>
         </section>
