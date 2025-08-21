@@ -40,13 +40,19 @@
   * {
     @apply border-border;
   }
-  body {
-    @apply text-foreground;
+  html {
     background-image: url("/background.png");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
+    background-color: #1a1a1a;
+    min-height: 100vh;
+  }
+  body {
+    @apply text-foreground;
+    background: transparent;
+    min-height: 100vh;
     /* Add overscroll behavior for mobile */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
@@ -187,4 +193,12 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.3);
   pointer-events: none;
+}
+
+/* Mobile background adjustments */
+@media (max-width: 768px) {
+  html {
+    background-attachment: scroll;
+    background-size: cover;
+  }
 }

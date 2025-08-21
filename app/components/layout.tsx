@@ -1,17 +1,23 @@
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
 import Navbar from "./navbar"
 import MobileNavWrapper from "./mobile-nav-wrapper"
-import type { ReactNode } from "react"
+import ChatWidgetWrapper from "./chat-widget-wrapper"
 
-interface LayoutProps {
-  children: ReactNode
-}
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow">{children}</main>
+      <Navbar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+
+      <main className="flex-1 relative">{children}</main>
+
       <MobileNavWrapper />
+      <ChatWidgetWrapper />
     </div>
   )
 }
