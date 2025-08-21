@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function IndustriesSection() {
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-transparent">
       <div className="container px-4 mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-4">Industries We Serve</h2>
