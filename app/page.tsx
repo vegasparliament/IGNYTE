@@ -37,6 +37,7 @@ import { useRef } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { ToastProvider } from "@/components/ui/toast"
 import ChatWidgetWrapper from "./components/chat-widget-wrapper"
+import Image from "next/image"
 
 export default function HomePage() {
   const router = useRouter()
@@ -61,6 +62,18 @@ export default function HomePage() {
           <div className="container px-4 mx-auto relative z-10">
             <div className="flex flex-col lg:flex-row items-center gap-12">
               <div className="flex-1 text-center lg:text-left">
+                {/* Logo */}
+                <div className="mb-8 flex justify-center lg:justify-start">
+                  <Image
+                    src="/ace-logo.png"
+                    alt="ACE Background Check"
+                    width={400}
+                    height={120}
+                    className="max-w-full h-auto"
+                    priority
+                  />
+                </div>
+
                 <div className="inline-flex items-center rounded-full border border-border/50 bg-secondary/50 px-3 py-1 text-sm backdrop-blur-sm mb-4">
                   Trusted by 10,000+ companies worldwide
                 </div>
