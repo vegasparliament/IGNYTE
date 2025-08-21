@@ -1,13 +1,17 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent } from "@/components/ui/card"
 import {
+  MessageCircle,
   CheckCircle,
   Clock,
   Shield,
   Search,
+  FileCheck,
   Home,
   MapPin,
   UserCheck,
@@ -21,10 +25,9 @@ import {
   Gavel,
   Skull,
   FileSignature,
-  Users,
-  Phone,
-  Mail,
 } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
 import type React from "react"
 import { useRouter } from "next/navigation"
 import Testimonials from "./components/testimonials"
@@ -35,8 +38,6 @@ import { useRef } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { ToastProvider } from "@/components/ui/toast"
 import ChatWidgetWrapper from "./components/chat-widget-wrapper"
-import Image from "next/image"
-import ServiceRequestForm from "./components/service-request-form"
 
 export default function HomePage() {
   const router = useRouter()
@@ -55,101 +56,43 @@ export default function HomePage() {
   return (
     <ToastProvider>
       <div className="min-h-screen">
-        <ChatWidgetWrapper />
-
         {/* Hero Section */}
-        <section className="py-20 px-4">
-          <div className="container mx-auto text-center">
-            {/* Logo */}
-            <div className="mb-8">
-              <Image
-                src="/ace-logo.png"
-                alt="ACE Background Check"
-                width={400}
-                height={120}
-                priority
-                className="mx-auto w-auto h-20 md:h-28 lg:h-32"
-              />
-            </div>
+        <section className="relative pt-32 pb-24 overflow-hidden">
+          <div className="absolute inset-0 bg-grid opacity-20" />
+          <div className="container px-4 mx-auto relative z-10">
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="flex-1 text-center lg:text-left">
+                {/* Logo */}
+                <div className="mb-8 flex justify-center lg:justify-start">
+                  <Image
+                    src="/ace-logo.png"
+                    alt="ACE Background Check"
+                    width={600}
+                    height={200}
+                    priority
+                    className="w-auto h-16 sm:h-20 md:h-24 lg:h-28 max-w-full"
+                  />
+                </div>
 
-            {/* Trust Badge */}
-            <div className="mb-8">
-              <Badge variant="secondary" className="px-4 py-2 text-sm font-medium">
-                <Shield className="w-4 h-4 mr-2" />
-                Trusted by 10,000+ Companies
-              </Badge>
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-              Professional Background Checks You Can Trust
-            </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              Fast, accurate, and compliant background screening services for employers, landlords, and individuals. Get
-              the information you need to make informed decisions.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-primary hover:bg-primary/90" onClick={scrollToGetStarted}>
-                Get Started Today
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-black bg-transparent"
-                onClick={scrollToPricing}
-              >
-                View Our Services
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 px-4">
-          <div className="container mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4 text-white">Why Choose ACE Background Check?</h2>
-              <p className="text-gray-300 max-w-2xl mx-auto">
-                We provide comprehensive, accurate, and fast background screening services with industry-leading
-                compliance and customer support.
-              </p>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardHeader>
-                  <Clock className="w-12 h-12 text-primary mb-4" />
-                  <CardTitle className="text-white">Fast Turnaround</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-300">Most reports completed within 24-48 hours</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardHeader>
-                  <Shield className="w-12 h-12 text-primary mb-4" />
-                  <CardTitle className="text-white">FCRA Compliant</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-300">Fully compliant with all federal and state regulations</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardHeader>
-                  <CheckCircle className="w-12 h-12 text-primary mb-4" />
-                  <CardTitle className="text-white">Accurate Results</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-300">99.9% accuracy rate with comprehensive verification</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardHeader>
-                  <Users className="w-12 h-12 text-primary mb-4" />
-                  <CardTitle className="text-white">Expert Support</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-300">Dedicated customer support team available 24/7</p>
-                </CardContent>
-              </Card>
+                <div className="inline-flex items-center rounded-full border border-border/50 bg-secondary/50 px-3 py-1 text-sm backdrop-blur-sm mb-4">
+                  Trusted by 10,000+ companies worldwide
+                </div>
+                <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6">
+                  Comprehensive Background <span className="text-primary">Screening Solutions</span>
+                </h1>
+                <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto lg:mx-0">
+                  From pre-employment checks to ongoing monitoring, we provide accurate, compliant, and timely
+                  background screening services for businesses of all sizes.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <Button size="lg" className="text-lg glow" onClick={scrollToGetStarted}>
+                    Get Started
+                  </Button>
+                  <Button size="lg" variant="secondary" className="text-lg" onClick={scrollToPricing}>
+                    View Pricing
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -558,6 +501,81 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Features Section */}
+        <section className="py-24">
+          <div className="container px-4 mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Why Choose Us</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Industry-leading accuracy, lightning-fast results, and dedicated support make us the trusted choice for
+                background screening.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <FeatureCard
+                icon={<Clock className="w-12 h-12 text-primary" />}
+                title="Quick Results"
+                description="Get comprehensive results within 24-48 hours, with some checks available instantly"
+              />
+              <FeatureCard
+                icon={<Shield className="w-12 h-12 text-primary" />}
+                title="FCRA Compliant"
+                description="All our processes strictly adhere to Fair Credit Reporting Act guidelines"
+              />
+              <FeatureCard
+                icon={<Search className="w-12 h-12 text-primary" />}
+                title="Thorough Search"
+                description="Access to nationwide databases, court records, and international sources"
+              />
+              <FeatureCard
+                icon={<FileCheck className="w-12 h-12 text-primary" />}
+                title="Easy Reports"
+                description="Clear, detailed reports in a simple format, accessible via our user-friendly dashboard"
+              />
+              <FeatureCard
+                icon={<CheckCircle className="w-12 h-12 text-primary" />}
+                title="Accuracy Guaranteed"
+                description="Double verification on all important findings, ensuring the highest level of accuracy"
+              />
+              <FeatureCard
+                icon={<MessageCircle className="w-12 h-12 text-primary" />}
+                title="24/7 Support"
+                description="Dedicated team ready to help anytime, with live chat, phone, and email support"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section className="py-24">
+          <div className="container px-4 mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">How It Works</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Our streamlined process makes background checks simple and efficient for your business.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <ProcessStep number={1} title="Sign Up" description="Create an account and choose your service package" />
+              <ProcessStep
+                number={2}
+                title="Submit Request"
+                description="Enter candidate information and select desired checks"
+              />
+              <ProcessStep
+                number={3}
+                title="We Investigate"
+                description="Our team conducts thorough background checks"
+              />
+              <ProcessStep
+                number={4}
+                title="Get Results"
+                description="Receive detailed reports via our secure platform"
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Industries We Serve */}
         <div>
           <IndustriesSection />
@@ -573,79 +591,253 @@ export default function HomePage() {
           <Testimonials />
         </div>
 
-        {/* Contact Section */}
-        <section className="py-20 px-4" ref={getStartedRef}>
-          <div className="container mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12">
-              <div>
-                <h2 className="text-3xl font-bold mb-6 text-white">Get Started Today</h2>
-                <p className="text-gray-300 mb-8">
-                  Ready to streamline your background check process? Contact us today to learn more about our services
-                  and get a custom quote for your needs.
+        {/* Contact Form Section */}
+        <section id="get-started-today" className="py-24" ref={getStartedRef}>
+          <div className="container px-4 mx-auto">
+            <div className="max-w-3xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold mb-4">Get Started Today</h2>
+                <p className="text-muted-foreground">
+                  Fill out the form below and one of our experts will contact you within 24 hours
                 </p>
-                <div className="space-y-4">
-                  <div className="flex items-center text-gray-300">
-                    <Phone className="w-5 h-5 mr-3 text-primary" />
-                    <span>(555) 123-4567</span>
-                  </div>
-                  <div className="flex items-center text-gray-300">
-                    <Mail className="w-5 h-5 mr-3 text-primary" />
-                    <span>info@acebackgroundcheck.com</span>
-                  </div>
-                  <div className="flex items-center text-gray-300">
-                    <MapPin className="w-5 h-5 mr-3 text-primary" />
-                    <span>123 Business Ave, Suite 100, City, State 12345</span>
-                  </div>
-                </div>
               </div>
-              <div>
-                <ServiceRequestForm />
-              </div>
+              <Card>
+                <CardContent className="p-6">
+                  <form
+                    className="space-y-6"
+                    action="https://formspree.io/f/xkgokylz"
+                    method="POST"
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      const form = e.target as HTMLFormElement
+                      fetch(form.action, {
+                        method: "POST",
+                        body: new FormData(form),
+                        headers: {
+                          Accept: "application/json",
+                        },
+                      }).then((response) => {
+                        if (response.ok) {
+                          toast({
+                            title: "Success!",
+                            description: "Your request has been submitted. We'll contact you soon.",
+                            duration: 5000,
+                          })
+                          form.reset()
+                          scrollToGetStarted()
+                        } else {
+                          toast({
+                            title: "Error",
+                            description: "There was a problem submitting your request. Please try again.",
+                            variant: "destructive",
+                            duration: 5000,
+                          })
+                        }
+                      })
+                    }}
+                  >
+                    <input type="hidden" name="_cc" value="JABOLOGA@msn.com" />
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label htmlFor="firstName" className="text-sm font-medium">
+                          First Name
+                        </label>
+                        <Input id="firstName" placeholder="John" name="firstName" />
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="lastName" className="text-sm font-medium">
+                          Last Name
+                        </label>
+                        <Input id="lastName" placeholder="Doe" name="lastName" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium">
+                        Work Email
+                      </label>
+                      <Input id="email" type="email" placeholder="john@company.com" name="email" />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="phone" className="text-sm font-medium">
+                        Phone Number
+                      </label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        placeholder="(XXX) XXX-XXXX"
+                        maxLength={14}
+                        onInput={(e) => {
+                          const input = e.currentTarget
+                          let value = input.value.replace(/\D/g, "")
+                          if (value.length > 0) {
+                            value = `(${value.slice(0, 3)}${value.length > 3 ? ") " : ""}${value.slice(3, 6)}${value.length > 6 ? "-" : ""}${value.slice(6, 10)}`
+                          }
+                          input.value = value
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="company" className="text-sm font-medium">
+                        Company
+                      </label>
+                      <Input id="company" placeholder="Company Name" name="company" />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="service" className="text-sm font-medium">
+                        Service Required
+                      </label>
+                      <Select name="service">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a service" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="nationwide">Nationwide Background Check</SelectItem>
+                          <SelectItem value="ohio-tenant">Ohio Tenant Screening</SelectItem>
+                          <SelectItem value="address-ssn">Past Address/SSN Verification</SelectItem>
+                          <SelectItem value="personal-reference">Personal Reference Verification</SelectItem>
+                          <SelectItem value="employment">Past Employment Verification</SelectItem>
+                          <SelectItem value="ohio-criminal">Ohio County Criminal Record</SelectItem>
+                          <SelectItem value="federal-bankruptcy">Federal Bankruptcy, Liens & Judgments</SelectItem>
+                          <SelectItem value="professional-license">Professional License Verification</SelectItem>
+                          <SelectItem value="education">Education Verification</SelectItem>
+                          <SelectItem value="sex-offender">National Sex Offenders Registry</SelectItem>
+                          <SelectItem value="people-locator">People Locator</SelectItem>
+                          <SelectItem value="ohio-driver">Ohio Driver's History</SelectItem>
+                          <SelectItem value="federal-criminal">Federal Criminal</SelectItem>
+                          <SelectItem value="death-records">Death Records</SelectItem>
+                          <SelectItem value="ucc-records">UCC Records</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="message" className="text-sm font-medium">
+                        Message
+                      </label>
+                      <Textarea id="message" placeholder="Tell us about your specific needs..." name="message" />
+                    </div>
+                    <Button type="submit" className="w-full">
+                      Submit Request
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-900 py-12 px-4">
-          <div className="container mx-auto">
-            <div className="grid md:grid-cols-4 gap-8">
+        <footer className="bg-neutral-900 text-neutral-200">
+          <div className="container px-4 mx-auto py-16">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
               <div>
-                <h3 className="text-white font-bold mb-4">ACE Background Check</h3>
-                <p className="text-gray-400">Professional background screening services you can trust.</p>
+                <h3 className="text-xl font-bold mb-4">Ace Background Check</h3>
+                <p className="text-neutral-400">Leading provider of comprehensive background screening solutions.</p>
+                <div className="mt-4 flex space-x-4">
+                  <a href="#" className="text-neutral-500 hover:text-neutral-300">
+                    {/* Facebook icon */}
+                  </a>
+                  <a href="#" className="text-neutral-500 hover:text-neutral-300">
+                    {/* Twitter icon */}
+                  </a>
+                  <a href="#" className="text-neutral-500 hover:text-neutral-300">
+                    {/* LinkedIn icon */}
+                  </a>
+                </div>
               </div>
               <div>
-                <h4 className="text-white font-semibold mb-4">Services</h4>
-                <ul className="space-y-2 text-gray-400">
-                  <li>Criminal Background Checks</li>
-                  <li>Employment Verification</li>
-                  <li>Education Verification</li>
-                  <li>Reference Checks</li>
+                <h4 className="font-semibold mb-4">Services</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200">
+                      Background Checks
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200">
+                      Criminal Records
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200">
+                      Employment Verification
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#services" className="text-neutral-400 hover:text-neutral-200">
+                      Education Verification
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/solutions/enterprise" className="text-neutral-400 hover:text-neutral-200">
+                      Enterprise Solutions
+                    </Link>
+                  </li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-semibold mb-4">Industries</h4>
-                <ul className="space-y-2 text-gray-400">
-                  <li>Healthcare</li>
-                  <li>Education</li>
-                  <li>Finance</li>
-                  <li>Technology</li>
+                <h4 className="font-semibold mb-4">Company</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="#about" className="text-neutral-400 hover:text-neutral-200">
+                      About Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#about#careers" className="text-neutral-400 hover:text-neutral-200">
+                      Careers
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#about#press" className="text-neutral-400 hover:text-neutral-200">
+                      Press
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/blog" className="text-neutral-400 hover:text-neutral-200">
+                      Blog
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#contact" className="text-neutral-400 hover:text-neutral-200">
+                      Contact
+                    </Link>
+                  </li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-semibold mb-4">Company</h4>
-                <ul className="space-y-2 text-gray-400">
-                  <li>About Us</li>
-                  <li>Contact</li>
-                  <li>Privacy Policy</li>
-                  <li>Terms of Service</li>
+                <h4 className="font-semibold mb-4">Legal</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="#" className="text-neutral-400 hover:text-neutral-200">
+                      Privacy Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" className="text-neutral-400 hover:text-neutral-200">
+                      Terms of Service
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" className="text-neutral-400 hover:text-neutral-200">
+                      Cookie Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" className="text-neutral-400 hover:text-neutral-200">
+                      FCRA Compliance
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </div>
-            <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-              <p>&copy; 2024 ACE Background Check. All rights reserved.</p>
+            <div className="border-t border-neutral-800 mt-12 pt-8 text-center text-neutral-400">
+              <p>&copy; {new Date().getFullYear()} Ace Background Check. All rights reserved.</p>
             </div>
           </div>
         </footer>
+
+        <ChatWidgetWrapper />
       </div>
     </ToastProvider>
   )

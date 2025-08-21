@@ -3,13 +3,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function Testimonials() {
   return (
-    <section className="py-24">
+    <section className="py-24 bg-transparent">
       <div className="container px-4 mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-4">What Our Clients Say</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Don't just take our word for it. Here's what some of our satisfied clients have to say about our background
-            check services.
+            Don't just take our word for it. Here's what some of our satisfied clients have to say about our background check services.
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -43,13 +42,8 @@ function TestimonialCard({ name, role, image, quote }: { name: string; role: str
       <CardContent className="p-6">
         <div className="flex items-center mb-4">
           <Avatar className="h-12 w-12 mr-4">
-            <AvatarImage src={image || "/placeholder.svg"} alt={name} />
-            <AvatarFallback>
-              {name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
+            <AvatarImage src={image} alt={name} />
+            <AvatarFallback>{name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
           </Avatar>
           <div>
             <h4 className="font-semibold">{name}</h4>
