@@ -897,6 +897,16 @@ export default function HomePage() {
                       FCRA Compliance
                     </Link>
                   </li>
+                  <li>
+                    <a
+                      href="https://preview--v4-3-acepro-x.lovable.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-neutral-400 hover:text-neutral-200"
+                    >
+                      Sign In
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>

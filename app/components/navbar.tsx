@@ -70,7 +70,9 @@ export default function Navbar() {
         </NavigationMenu>
         {/* Hide desktop buttons on mobile */}
         <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost">Sign In</Button>
+          <Button variant="ghost" onClick={() => window.open("https://preview--v4-3-acepro-x.lovable.app/", "_blank")}>
+            Sign In
+          </Button>
           <Button className="glow" onClick={() => scrollToSection("get-started-today")}>
             Get Started
           </Button>
