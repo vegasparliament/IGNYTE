@@ -731,7 +731,16 @@ export default function HomePage() {
           <div className="container px-4 mx-auto py-16">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
               <div>
-                <h3 className="text-xl font-bold mb-4">Ace Background Check</h3>
+                <div className="flex items-center mb-4">
+                  <Image
+                    src="/ace-logo-mark.png"
+                    alt="ACE Background Check"
+                    width={120}
+                    height={40}
+                    className="w-auto h-8 mr-3"
+                  />
+                  <h3 className="text-xl font-bold">Ace Background Check</h3>
+                </div>
                 <p className="text-neutral-400">Leading provider of comprehensive background screening solutions.</p>
                 <div className="mt-4 flex space-x-4">
                   <a href="#" className="text-neutral-500 hover:text-neutral-300">

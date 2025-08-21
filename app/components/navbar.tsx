@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
@@ -26,8 +27,15 @@ export default function Navbar() {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between px-4">
-        <Link href="/" className="font-bold text-xl text-primary">
-          ABC
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/ace-logo-mark.png"
+            alt="ACE Background Check"
+            width={120}
+            height={40}
+            priority
+            className="w-auto h-8"
+          />
         </Link>
         {/* Hide desktop navigation on mobile */}
         <NavigationMenu className="hidden md:block">
@@ -68,7 +76,7 @@ export default function Navbar() {
           </Button>
           <Button
             variant="outline"
-            className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors bg-transparent"
             onClick={() => (window.location.href = "tel:18007319221")}
           >
             <Phone className="mr-2 h-4 w-4" /> Call Us: 1 (800) 731-9221
