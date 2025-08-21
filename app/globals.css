@@ -13,8 +13,8 @@
     --popover: 220 10% 8%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 50 100% 50%;
-    --primary-foreground: 220 10% 8%;
+    --primary: 35 65% 45%;
+    --primary-foreground: 0 0% 98%;
 
     --secondary: 220 10% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -81,7 +81,7 @@
   content: "";
   position: absolute;
   inset: -1px;
-  background: linear-gradient(to bottom right, hsl(50 100% 50% / 0.3), transparent);
+  background: linear-gradient(to bottom right, hsl(35 65% 45% / 0.3), transparent);
   z-index: -1;
   border-radius: inherit;
 }
