@@ -96,6 +96,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        {/* Section Divider */}
+        <div className="border-t border-border/20"></div>
 
         {/* Services Section */}
         <section id="services" className="py-24">
@@ -500,6 +502,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        {/* Section Divider */}
+        <div className="border-t border-border/20"></div>
 
         {/* Features Section */}
         <section className="py-24">
@@ -545,6 +549,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        {/* Section Divider */}
+        <div className="border-t border-border/20"></div>
 
         {/* How It Works Section */}
         <section className="py-24">
@@ -575,21 +581,29 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        {/* Section Divider */}
+        <div className="border-t border-border/20"></div>
 
         {/* Industries We Serve */}
         <div>
           <IndustriesSection />
         </div>
+        {/* Section Divider */}
+        <div className="border-t border-border/20"></div>
 
         {/* Pricing Section */}
         <div id="pricing" ref={pricingRef}>
           <PricingPlans />
         </div>
+        {/* Section Divider */}
+        <div className="border-t border-border/20"></div>
 
         {/* Testimonials Section */}
         <div>
           <Testimonials />
         </div>
+        {/* Section Divider */}
+        <div className="border-t border-border/20"></div>
 
         {/* Contact Form Section */}
         <section id="get-started-today" className="py-24" ref={getStartedRef}>
